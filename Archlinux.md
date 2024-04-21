@@ -116,6 +116,7 @@ paru ledger-live-bin
 
 
 # Hyprland
+* Git repo:  https://github.com/blasvinas/archlinux
 * Configure wifi using nmtui
 * Configure kitty
     * cp /usr/share/doc/kitty/kitty.conf /home/blas/.config/kitty
