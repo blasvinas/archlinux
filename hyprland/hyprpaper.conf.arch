@@ -1,0 +1,6 @@
+preload = /home/blas/Dropbox/wallpapers/cyber.jpg
+wallpaper = HDMI-A-1,/home/blas/Dropbox/wallpapers/cyber.jpg
+wallpaper = eDP-1,/home/blas/Dropbox/wallpapers/cyber.jpg
+
+#enable splash text rendering over the wallpaper
+splash = true
