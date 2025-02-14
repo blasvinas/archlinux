@@ -35,13 +35,19 @@ paru -S --needed --noconfirm timeshift
 paru -S --needed --noconfirm deja-dup
 paru -S --needed --noconfirm python-requests-oauthlib
 paru -S --needed --noconfirm gnome-keyring
+paru -S --needed --noconfirm yazi
 paru -S --needed --noconfirm wireplumber libgtop bluez bluez-utils btop networkmanager dart-sass wl-clipboard brightnessctl swww python upower pacman-contrib power-profiles-daemon gvfs
 paru -S --needed --noconfirm aylurs-gtk-shell-git grimblast-git gpu-screen-recorder-git hyprpicker matugen-bin python-gpustat hyprsunset-git hypridle-git
 paru -S --needed --noconfirm ags-hyprpanel-git
+paru -R --noconfirm dunst
 gsettings set org.gnome.desktop.interface gtk-theme Dracula
 gsettings set org.gnome.desktop.interface icon-theme candy-icons
-gsettings set org.gnome.desktop.interface font-name "MesloLGS Nerd Font Mono"
+gsettings set org.gnome.desktop.interface font-name "JetBrainsMono Nerd"
 git config --global user.email "blasvinas@gmail.com"
 git config --global user.name "Blas Vinas"
 paru -c
+systemctl enable --now bluetooth
+systemctl enable --now cups
+sudo mkdir /etc/sddm.conf.d/
+sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
 ssh-keygen
