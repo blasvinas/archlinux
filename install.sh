@@ -46,8 +46,10 @@ gsettings set org.gnome.desktop.interface font-name "JetBrainsMono Nerd"
 git config --global user.email "blasvinas@gmail.com"
 git config --global user.name "Blas Vinas"
 paru -c
-systemctl enable --now bluetooth
-systemctl enable --now cups
+sudo systemctl enable --now bluetooth
+sudo systemctl enable --now cups
+sudo systemctl enable --now cronie.service
 sudo mkdir /etc/sddm.conf.d/
 sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
 ssh-keygen
+sudo pkexec env $(env) timeshift-launcher
