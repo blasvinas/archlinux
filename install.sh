@@ -38,5 +38,4 @@ gsettings set org.gnome.desktop.interface font-name "MesloLGS Nerd Font Mono"
 git config --global user.email "blasvinas@gmail.com"
 git config --global user.name "Blas Vinas"
 ssh-keygen
-
-
+paru -c
