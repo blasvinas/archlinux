@@ -1,4 +1,10 @@
 paru -R --noconfirm dolphin
+paru -S --needed --noconfirm firefox
+paru -S --needed --noconfirm cups
+paru -S --needed --noconfirm hplip
+paru -S --needed --noconfirm bluez
+paru -S --needed --noconfirm bluez-utils
+paru -S --needed --noconfirm ghostty
 paru -S --needed --noconfirm neovim
 paru -S --needed --noconfirm thunderbird
 paru -S --needed --noconfirm libreoffice-fresh
@@ -12,7 +18,7 @@ paru -S --needed --noconfirm nautilus-dropbox
 paru -S --needed --noconfirm pavucontrol
 paru -S --needed --noconfirm unzip
 paru -S --needed --noconfirm blueman
-paru -S --needed --noconfirm ttf-meslo-nerd
+paru -S --needed --noconfirm ttf-jetbrains-mono-nerd
 paru -S --needed --noconfirm ttf-font-awesome
 paru -S --needed --noconfirm hyprlock
 paru -S --needed --noconfirm hypridle
