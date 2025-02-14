@@ -36,6 +36,7 @@ paru -S --needed --noconfirm deja-dup
 paru -S --needed --noconfirm python-requests-oauthlib
 paru -S --needed --noconfirm gnome-keyring
 paru -S --needed --noconfirm yazi
+paru -S --needed --noconfirm grimblast
 paru -S --needed --noconfirm wireplumber libgtop bluez bluez-utils btop networkmanager dart-sass wl-clipboard brightnessctl swww python upower pacman-contrib power-profiles-daemon gvfs
 paru -S --needed --noconfirm aylurs-gtk-shell-git grimblast-git gpu-screen-recorder-git hyprpicker matugen-bin python-gpustat hyprsunset-git hypridle-git
 paru -S --needed --noconfirm ags-hyprpanel-git
