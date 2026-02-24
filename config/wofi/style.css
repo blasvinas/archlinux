@@ -1,0 +1,77 @@
+/* Catppuccin Mocha palette */
+@define-color base #1E1E2E;
+@define-color crust #11111B;
+@define-color mantle #181825;
+@define-color text #CDD6F4;
+@define-color subtext0 #A6ADC8;
+@define-color subtext1 #BAC2DE;
+@define-color surface0 #313244;
+@define-color surface1 #45475A;
+@define-color surface2 #585B70;
+@define-color overlay0 #6C7086;
+@define-color overlay1 #7F849C;
+@define-color overlay2 #9399B2;
+@define-color lavender #B4BEFE;
+@define-color blue #89B4FA;
+@define-color sapphire #74C7CE;
+@define-color sky #89DCEB;
+@define-color teal #94E2D5;
+@define-color green #A6E3AD;
+@define-color yellow #F9E2AF;
+@define-color peach #FAB387;
+@define-color maroon #EBA0AC;
+@define-color red #F38BA8;
+@define-color mauve #CBA6F7;
+@define-color pink #F5C2E7;
+@define-color flamingo #F2CDCD;
+@define-color rosewater #F5E0DC;
+
+/* Wofi Styling */
+window {
+    background-color: @base;
+    border: 2px solid @surface2;
+    border-radius: 8px;
+    padding: 10px;
+    opacity: 0.9;
+}
+
+#input {
+    background-color: @crust;
+    color: @text;
+    border: 1px solid @surface1;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 8px;
+}
+
+#inner-box {
+    background-color: @mantle;
+    border-radius: 5px;
+}
+
+#outer-box {
+    padding: 5px;
+}
+
+#entry {
+    color: @text;
+    padding: 5px;
+    margin: 2px 0;
+    border-radius: 3px;
+}
+
+#entry:selected {
+    background-color: @lavender;
+    color: @base;
+    /* Text color for selected entry */
+}
+
+#scroll {
+    background-color: @crust;
+    border-radius: 5px;
+}
+
+scrollbar slider {
+    background-color: @surface1;
+    border-radius: 5px;
+}

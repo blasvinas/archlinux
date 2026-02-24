@@ -1,0 +1,61 @@
+#window {
+    background-color: rgba(30, 30, 30, 0.9);
+    /* Dark background with slight transparency */
+    border: 2px solid #5f87af;
+    /* Blue border */
+    border-radius: 8px;
+    /* Rounded corners for the window */
+    padding: 10px;
+    /* Padding inside the window */
+}
+
+#input {
+    background-color: #444444;
+    /* Darker grey for input field */
+    color: #ffffff;
+    /* White text for input */
+    border: 1px solid #777777;
+    /* Grey border for input */
+    border-radius: 5px;
+    /* Rounded corners for input */
+    padding: 5px;
+    /* Padding inside the input field */
+    margin-bottom: 10px;
+    /* Space below the input field */
+}
+
+#scroll {
+    background-color: transparent;
+    /* Transparent background for the scrollable area */
+}
+
+#entry {
+    padding: 5px 10px;
+    /* Padding for each entry */
+    margin: 2px 0;
+    /* Vertical margin between entries */
+    border-radius: 3px;
+    /* Slightly rounded corners for entries */
+}
+
+#entry:selected {
+    background-color: #5f87af;
+    /* Blue background for selected entry */
+    color: #ffffff;
+    /* White text for selected entry */
+}
+
+#text {
+    color: #cccccc;
+    /* Light grey text for unselected entries */
+}
+
+#text:selected {
+    color: #ffffff;
+    /* White text for selected entry text */
+}
+
+#img {
+    margin-right: 8px;
+    /* Space between image and text in entries */
+}
