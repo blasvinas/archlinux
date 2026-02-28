@@ -91,13 +91,15 @@ makepkg -si
 - paru otf-font-awesome
 - paru ttf-arimo-nerd
 - paru noto-fonts
-- paru hyprpaper
 - paru hyprlock
 - paru hypridle
 - paru yad
 - paru brightnessctl
 - paru kwalletmanager -> Disable kwallet
 - paru brave-bin
+- paru socat
+- paru swww
+- paru waypaper
 
 ### Screenshots
 
@@ -231,6 +233,7 @@ paru ledger-live-bin
 - paru timeshift
 - sudo systemctl enable --now cronie.service
 - sudo pkexec env $(env) timeshift-launcher
+- sudo timeshift --create
 - sudo timeshift --list
 
 ## Kitty
