@@ -100,6 +100,17 @@ makepkg -si
 - paru socat
 - paru swww
 - paru waypaper
+- paru swaync
+
+### Rofi
+- git clone git@github.com:adi1090x/rofi.git --depth=1
+- mkdir -p ~/.config/rofi
+- cd rofi
+- cp -r colors/ config.rasi launchers/ ~/.config/rofi/
+- cd .config/rofi/launchers/type-2/
+- nvim launcher.sh 
+- modify theme='style-2'
+- Add this to hyprland.conf: bind = $mainMod, R, exec, ~/.config/rofi/launchers/type-2/launcher.sh
 
 ### Screenshots
 
@@ -107,6 +118,10 @@ makepkg -si
 - paru eog
 - paru slurp
 - Add the following line to hyprland.conf
+
+
+### Man pages
+- paru -S man-db man-pages
 
 ### Enable copy in vim
 
