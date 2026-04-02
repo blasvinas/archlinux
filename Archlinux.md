@@ -526,3 +526,14 @@ makepkg -si
 - paru yazi
 - paru kwalletmanager -> Disable kwallet
 - paru brave-bin
+
+## Install WAVLINK
+- paru -S evdi displaylink
+- sudo systemctl enable --now displaylink.service
+- ls /usr/src | grep evdi
+- sudo dkms add -m evdi -v 1.14.15.r1.geb36e4f
+- paru linux-headers-6.19.6-zen1-1-zen
+- sudo pacman -S linux-zen-headers
+- sudo dkms autoinstall
+- sudo dkms build -m evdi -v 1.14.15.r1.geb36e4f
+
