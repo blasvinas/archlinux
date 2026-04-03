@@ -3,7 +3,6 @@
 ## Boot
 
 - Go to the Bios (F2)
-
   - Disable Secure Boot
   - Enable UEFI boot
 
@@ -13,7 +12,6 @@
 ## Wireless Configuration
 
 - For wireless connection
-
   - $ iwctl
   - [iwd]# device list
   - [iwd]# station device scan
@@ -91,26 +89,13 @@ makepkg -si
 - paru otf-font-awesome
 - paru ttf-arimo-nerd
 - paru noto-fonts
+- paru hyprpaper
 - paru hyprlock
 - paru hypridle
 - paru yad
 - paru brightnessctl
 - paru kwalletmanager -> Disable kwallet
 - paru brave-bin
-- paru socat
-- paru swww
-- paru waypaper
-- paru swaync
-
-### Rofi
-- git clone git@github.com:adi1090x/rofi.git --depth=1
-- mkdir -p ~/.config/rofi
-- cd rofi
-- cp -r colors/ config.rasi launchers/ ~/.config/rofi/
-- cd .config/rofi/launchers/type-2/
-- nvim launcher.sh 
-- modify theme='style-2'
-- Add this to hyprland.conf: bind = $mainMod, R, exec, ~/.config/rofi/launchers/type-2/launcher.sh
 
 ### Screenshots
 
@@ -118,10 +103,6 @@ makepkg -si
 - paru eog
 - paru slurp
 - Add the following line to hyprland.conf
-
-
-### Man pages
-- paru -S man-db man-pages
 
 ### Enable copy in vim
 
@@ -167,7 +148,6 @@ Current=Sugar-Candy
 ```
 
 - To change the background:
-
   - sudo cp ~/Dropbox/wallpapers/background.jpg /usr/share/sddm/themes/Sugar-Candy/Backgrounds
   - sudo vim /usr/share/sddm/themes/Sugar-Candy/theme.conf
   - change the background to the path of your image, for example:
@@ -248,7 +228,6 @@ paru ledger-live-bin
 - paru timeshift
 - sudo systemctl enable --now cronie.service
 - sudo pkexec env $(env) timeshift-launcher
-- sudo timeshift --create
 - sudo timeshift --list
 
 ## Kitty
@@ -339,7 +318,6 @@ Add the following lines:
 ## Wireless Configuration
 
 - For wireless connection
-
   - $ iwctl
   - [iwd]# device list
   - [iwd]# station device scan
@@ -376,9 +354,9 @@ Add the following lines:
 
 ## Format the partitions
 
-- Format root partition running: mkfs.btrfs /partition_path
-- Format swap partition running mkswap /partition_path
 - Format the boot partition running mkfs.fat -F 32 /partition_path
+- Format swap partition running mkswap /partition_path
+- Format root partition running: mkfs.btrfs /partition_path
 
 ## Mount the file systems
 
@@ -388,7 +366,7 @@ Add the following lines:
 
 ## Install Packages
 
-- pacstrap -K /mnt base linux linux-firmware
+- pacstrap -K /mnt base linux-zen linux-zen-headers linux-firmware
 
 ## Configure fstab
 
@@ -409,10 +387,6 @@ Add the following lines:
 - echo LANG=en_US.UTF-8 > /etc/locale.conf
 - export LANG=en_US.UTF-8
 
-## Install network packages
-
-pacman -S networkmanager wpa_supplicant
-
 ## Confugure boot loader
 
 - bootctl install
@@ -429,8 +403,8 @@ editor  no
 
 ```
 title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /initramfs-linux.img
+linux   /vmlinuz-linux-zen
+initrd  /initramfs-linux-zen.img
 options root=UUID=<your-root-partition-uuid> rw
 ```
 
@@ -445,14 +419,6 @@ options root=UUID=<your-root-partition-uuid> rw
 - ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 - hwclock --systohc
 
-## root password
-
-- passwd
-
-## Reboot
-
-- reboot
-
 ## Additional steps
 
 - passwd
@@ -464,20 +430,31 @@ options root=UUID=<your-root-partition-uuid> rw
 - systemctl start NetworkManager
 - systemctl enable NetworkManager
 - nmtui to configure wireless (you can try nmcli device wifi connect ATTF password <password>
+- pacman -S sudo git openssh unzip neovim blueman networkmanager wpa_supplicant firefox bluez bluez-utils
+- useradd -c "Blas Vinas" -m blas
+- passwd blas
+- vim /etc/sudoers.d/00_blas and add: blas ALL=(ALL) NOPASSWD: ALL
+- Logout and login again as blas
 
 ## Install paru
 
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si
+- git clone https://aur.archlinux.org/paru.git
+- cd paru
+- makepkg -si
+- rm -rf ~/paru
 
 ### Paru in reverse order
 
-- paru packgage --bottomup
+- sudo vim /etc/paru.conf and remove the comment for BottomUp
 
 ## Install 1password
 
 - paru 1password
+
+## OpenSSH
+
+- paru openssh
+- ssh-keygen
 
 ## Install Dropbox
 
@@ -498,7 +475,19 @@ makepkg -si
 
 ## Hyprland
 
+- paru kitty
+- pary ghostty
 - paru hyprland
+- start-hyprlanf
+- Configure 1password.
+- Open terminal ^Q
+- 1password &
+- firefox & and login
+- Go to Github and configure ssh key
+- cd ~, git clone git@github.com:blasvinas/archlinux.git
+- cd ~/.config/hypr/
+- cp hyprland.conf hyprmand.conf.orig
+- cp ~/archlinx/config/hypr/hyprland.conf .
 - paru -S htop iwd kitty ghostty qt5-wayland uwsm wget wireless_tools wofi wget xdg-utils xdg-desktop-portal-hyprland
 - paru network-manager-applet
 - paru wl-clipboard
@@ -526,14 +515,3 @@ makepkg -si
 - paru yazi
 - paru kwalletmanager -> Disable kwallet
 - paru brave-bin
-
-## Install WAVLINK
-- paru -S evdi displaylink
-- sudo systemctl enable --now displaylink.service
-- ls /usr/src | grep evdi
-- sudo dkms add -m evdi -v 1.14.15.r1.geb36e4f
-- paru linux-headers-6.19.6-zen1-1-zen
-- sudo pacman -S linux-zen-headers
-- sudo dkms autoinstall
-- sudo dkms build -m evdi -v 1.14.15.r1.geb36e4f
-
