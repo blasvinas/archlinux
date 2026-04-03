@@ -468,6 +468,11 @@ options root=UUID=<your-root-partition-uuid> rw
   - Context Menu
   - Click on the Dropbox checkbox
 
+## Notifycations
+
+- paru libnotify
+- paru dunst
+
 ## Hyprland
 
 - paru kitty
@@ -483,16 +488,23 @@ options root=UUID=<your-root-partition-uuid> rw
 - cd ~/.config/hypr/
 - cp hyprland.conf hyprmand.conf.orig
 - cp ~/archlinx/config/hypr/hyprland.conf .
+- paru -S htop iwd qt5-wayland uwsm wget wireless_tools wofi xdg-utils xdg-desktop-portal-hyprland
 - paru rofi
 - paru network-manager-applet
 - paru wl-clipboard
+- paru nautilus
 - paru waybar
+- paru dropbox dolphin-plugins
+- paru nautilus-dropbox
 - paru pipewire
 - paru pipewire-pulse
 - paru pavucontrol
+- paru wlogout
+- paru nwg-drawer
 - paru ttf-meslo-nerd
 - paru ttf-font-awesome
 - paru otf-font-awesome
+- paru ttf-arimo-nerd
 - paru noto-fonts
 - paru hyprpaper
 - paru hyprlock
@@ -500,5 +512,5 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru yad
 - paru brightnessctl
 - paru yazi
-- paru swww
-- paru swaync
+- paru kwalletmanager -> Disable kwallet
+- paru brave-bin
