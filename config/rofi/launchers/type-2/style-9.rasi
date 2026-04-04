@@ -35,6 +35,7 @@ window {
     border:                      0px solid;
     border-radius:               20px;
     border-color:                @selected;
+/*    background-color:            @background; */
     background-color:            black /70%;
     cursor:                      "default";
 }

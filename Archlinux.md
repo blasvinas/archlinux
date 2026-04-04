@@ -387,7 +387,7 @@ Add the following lines:
 - echo LANG=en_US.UTF-8 > /etc/locale.conf
 - export LANG=en_US.UTF-8
 
-## Confugure boot loader
+## Configure boot loader
 
 - bootctl install
 - vim /boot/loader/loader.conf
@@ -487,6 +487,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru network-manager-applet
 - paru wl-clipboard
 - paru waybar
+- paru waypaper
 - paru pipewire
 - paru pipewire-pulse
 - paru pavucontrol
@@ -502,3 +503,35 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru yazi
 - paru swww
 - paru swaync
+- paru npm
+- paru go
+
+## Configure rofi
+- git clone --depth=1 https://github.com/adi1090x/rofi.git
+- cd rofi
+- ./setup.sh 
+- cd ~/.config/rofi/launchers/type-3
+- nvim launch.sh 
+- change theme to style-3 
+- nvim /home/blas/.config/rofi/launchers/type-3/style-3.rasi
+- change the background-color for the window to black /80%
+- nvim ~/.config/rofi/powermenu/type-4/powermenu.sh
+- change the theme to style-3
+- nvim ~/.config/rofi/powermenu/type-4/style-3.rasi
+- change background-window to black /80%
+
+
+## Plasma Login Manager
+- sudo midir /usr/share/backgrounds/
+- cd /usr/share/backgrounds/ 
+- cp /home/blas/wallpapers/background.jpg .
+- sudo nvim /etc/plasmalogin.conf.  Add the following:
+```
+[Greeter]
+WallpaperPluginId=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/backgrounds/background.jpg
+```
+- paru plasma-login-manager
+- sudo systemctl enable --now plasmalogin
