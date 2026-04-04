@@ -488,6 +488,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru wl-clipboard
 - paru waybar
 - paru waypaper
+- paru socat
 - paru pipewire
 - paru pipewire-pulse
 - paru pavucontrol
