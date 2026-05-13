@@ -424,7 +424,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - passwd
 - pacman -S networkmanager wpa_supplicant 
 - pacman -S gcc debugedit fakeroot pkgconfig
-- pacman -S sudo git openssh unzip neovim blueman networkmanager wpa_supplicant firefox bluez bluez-utils man-db
+- pacman -S sudo git openssh unzip neovim blueman networkmanager wpa_supplicant firefox bluez bluez-utils man-db 
 - exit
 - umount -R /mnt
 - reboot
@@ -502,6 +502,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru yad
 - paru brightnessctl
 - paru yazi
+- paru poppler
 - paru swww
 - paru swaync
 - paru npm
