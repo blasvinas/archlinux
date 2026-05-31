@@ -29,7 +29,7 @@ hl.config({
 	},
 
 	general = {
-		gaps_in = 5,
+		gaps_in = 1,
 		gaps_out = 10,
 		border_size = 2,
 
@@ -49,6 +49,9 @@ hl.config({
 
 	decoration = {
 		rounding = 10,
+		active_opacity = 0.9, -- Opacity of focused windows
+		inactive_opacity = 0.85, -- Transparency for unfocused windows (adjust as needed)
+		fullscreen_opacity = 1.0,
 		blur = {
 			enabled = true,
 			size = 5,
@@ -72,10 +75,6 @@ hl.config({
 
 	dwindle = {
 		preserve_split = true,
-	},
-
-	gestures = {
-		gesture = { 3, "horizontal", "workspace" },
 	},
 
 	misc = {
@@ -123,7 +122,6 @@ end)
 
 -- Application Launchers & Management
 hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
-hl.bind("SUPER + L", hl.dsp.exec_cmd("nwg-drawer"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("1password"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("SUPER + R", hl.dsp.exec_cmd("~/.config/rofi/launchers/type-3/launcher.sh"))
@@ -138,7 +136,7 @@ hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("killall -9 wpaperd && wpaperd"))
 
 -- Function Keys
-hl.bind("SUPER + F1", hl.dsp.exec_cmd("firefox"))
+-- hl.bind("SUPER + F1", hl.dsp.exec_cmd("firefox"))
 
 -- Window Focus (Arrows)
 hl.bind("SUPER + left", hl.dsp.focus({ direction = "l" }))
@@ -189,3 +187,5 @@ hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })

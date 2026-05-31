@@ -169,7 +169,8 @@
     //    "tooltip": false,
     //},
     "custom/launcher": {
-        "format": "",
+        //"format": ""
+        "format": "",
         "on-click": "/home/blas/.config/rofi/launchers/type-3/launcher.sh",
         "tooltip": false,
     },
