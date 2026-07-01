@@ -508,6 +508,26 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru npm
 - paru go
 
+## Configure a theme
+
+- paru dracula-gtk-theme
+- (No needed) Create a directory .themes in your home directory. For example Sweet-Dark-v40
+- gsettings set org.gnome.desktop.interface gtk-theme Dracula
+- gsettings get org.gnome.desktop.interface gtk-theme
+- vim .config/hypr/hyprland.conf and add env = GTK_THEME, Dracula
+
+## Configure Icons
+
+- paru candy-icons
+- ( No needed) Create a directory .icons in your home directory. For example candy-icons
+- gsettings set org.gnome.desktop.interface icon-theme candy-icons
+- gsettings get org.gnome.desktop.interface icon-theme
+
+## Configure Fonts
+
+- gsettings set org.gnome.desktop.interface font-name "MesloLGS Nerd Font Mono"
+- gsettings get org.gnome.desktop.interface font-name
+
 ## Configure rofi
 - git clone --depth=1 https://github.com/adi1090x/rofi.git
 - cd rofi
@@ -524,9 +544,9 @@ options root=UUID=<your-root-partition-uuid> rw
 
 
 ## Plasma Login Manager
-- sudo midir /usr/share/backgrounds/
+- sudo mkdir /usr/share/backgrounds/
 - cd /usr/share/backgrounds/ 
-- cp /home/blas/wallpapers/background.jpg .
+- sudo cp /home/blas/wallpapers/background.jpg .
 - sudo nvim /etc/plasmalogin.conf.  Add the following:
 ```
 [Greeter]
