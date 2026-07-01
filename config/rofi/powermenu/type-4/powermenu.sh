@@ -11,7 +11,7 @@
 
 # Current Theme
 dir="$HOME/.config/rofi/powermenu/type-4"
-theme='style-3'
+theme='style-5'
 
 # CMDs
 uptime="`uptime -p | sed -e 's/up //g'`"
@@ -56,25 +56,28 @@ run_rofi() {
 run_cmd() {
 	selected="$(confirm_exit)"
 	if [[ "$selected" == "$yes" ]]; then
-		if [[ $1 == '--shutdown' ]]; then
+		if [[ $1 == '--lock' ]]; then
+			#hyprlock --quiet
+			systemctl suspend
+		elif [[ $1 == '--shutdown' ]]; then
 			systemctl poweroff
 		elif [[ $1 == '--reboot' ]]; then
 			systemctl reboot
 		elif [[ $1 == '--suspend' ]]; then
-			mpc -q pause
-			amixer set Master mute
+			# mpc -q pause
+			# amixer set Master mute
 			systemctl suspend
 		elif [[ $1 == '--logout' ]]; then
-			hyprctl dispatch exit
-			# Iif [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
-				# openbox --exit
-			# elif [[ "$DESKTOP_SESSION" == 'bspwm' ]]; then
-				# bspc quit
-			# elif [[ "$DESKTOP_SESSION" == 'i3' ]]; then
-				# i3-msg exit
-			# elif [[ "$DESKTOP_SESSION" == 'plasma' ]]; then
-				# qdbus org.kde.ksmserver /KSMServer logout 0 0 0
-			# fi
+			hyprctl dispatch 'hl.dsp.exit()'
+			#if [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
+			#	openbox --exit
+			#elif [[ "$DESKTOP_SESSION" == 'bspwm' ]]; then
+			#	bspc quit
+			#elif [[ "$DESKTOP_SESSION" == 'i3' ]]; then
+			#	i3-msg exit
+			#elif [[ "$DESKTOP_SESSION" == 'plasma' ]]; then
+			#	qdbus org.kde.ksmserver /KSMServer logout 0 0 0
+			#fi
 		fi
 	else
 		exit 0
@@ -91,12 +94,12 @@ case ${chosen} in
 		run_cmd --reboot
         ;;
     $lock)
+		run_cmd --lock
 		#if [[ -x '/usr/bin/betterlockscreen' ]]; then
 		#	betterlockscreen -l
 		#elif [[ -x '/usr/bin/i3lock' ]]; then
 		#	i3lock
 		#fi
-		hyprlock
         ;;
     $suspend)
 		run_cmd --suspend
