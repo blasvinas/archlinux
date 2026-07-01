@@ -504,6 +504,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru yazi
 - paru poppler
 - paru swww
+- paru mpvpaper
 - paru swaync
 - paru npm
 - paru go
