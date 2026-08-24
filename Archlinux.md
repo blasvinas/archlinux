@@ -199,6 +199,9 @@ options root=UUID=<your-root-partition-uuid> rw
 - gsettings get org.gnome.desktop.interface gtk-theme
 - vim .config/hypr/hyprland.conf and add env = GTK_THEME, Dracula
 
+## Configure Dark model
+- gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
 ## Configure Icons
 
 - paru candy-icons
@@ -226,6 +229,9 @@ options root=UUID=<your-root-partition-uuid> rw
 - change background-window to black /80%
 
 ## Plasma Login Manager
+- paru plasma-login-manager
+- sudo systemctl enable --now plasmalogin
+
 - sudo mkdir /usr/share/backgrounds/
 - cd /usr/share/backgrounds/ 
 - sudo cp /home/blas/wallpapers/background.jpg .
@@ -237,8 +243,6 @@ WallpaperPluginId=org.kde.image
 [Greeter][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/backgrounds/background.jpg
 ```
-- paru plasma-login-manager
-- sudo systemctl enable --now plasmalogin
 
 ## fish
 
