@@ -118,7 +118,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - passwd
 - pacman -S networkmanager wpa_supplicant 
 - pacman -S gcc debugedit fakeroot pkgconfig
-- pacman -S sudo git openssh unzip neovim blueman networkmanager wpa_supplicant firefox bluez bluez-utils man-db 
+- pacman -S sudo git openssh unzip neovim blueman networkmanager wpa_supplicant firefox bluez bluez-utils man-db usbutils
 - exit
 - umount -R /mnt
 - reboot
@@ -190,6 +190,7 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru swaync
 - paru npm
 - paru go
+- paru hyprpolkitagent
 
 ## Configure a theme
 
