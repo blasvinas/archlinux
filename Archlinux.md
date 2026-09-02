@@ -230,9 +230,6 @@ options root=UUID=<your-root-partition-uuid> rw
 - change background-window to black /80%
 
 ## Plasma Login Manager
-- paru plasma-login-manager
-- sudo systemctl enable --now plasmalogin
-
 - sudo mkdir /usr/share/backgrounds/
 - cd /usr/share/backgrounds/ 
 - sudo cp /home/blas/wallpapers/background.jpg .
@@ -244,6 +241,8 @@ WallpaperPluginId=org.kde.image
 [Greeter][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/backgrounds/background.jpg
 ```
+- paru plasma-login-manager
+- sudo systemctl enable --now plasmalogin
 
 ## fish
 
