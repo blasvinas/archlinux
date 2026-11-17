@@ -10,8 +10,12 @@ Singleton {
     id: root
 
     // ---- Active variant ------------------------------------------------------
-    property string variant: "mocha"
-    readonly property var names: ["mocha", "macchiato", "latte", "nord", "gruvbox", "tokyonight"]
+    property string variant: "wallpaper"
+    readonly property var names: ["wallpaper", "mocha", "macchiato", "latte", "nord", "gruvbox", "tokyonight"]
+
+    // Palette derived from the current wallpaper (populated at runtime by the
+    // extractor Process below). Empty until the first generation completes.
+    property var _wallpaperPalette: ({})
 
     function setVariant(name) {
         if (palettes[name]) {
@@ -19,18 +23,44 @@ Singleton {
             store.setText(name);
         }
     }
+
+    // Regenerate the wallpaper palette from an image. When it finishes it
+    // updates _wallpaperPalette; if the active variant is "wallpaper" the UI
+    // repaints automatically.
+    function generateFromWallpaper(path) {
+        if (!path)
+            return;
+        extractor.command = ["python3", root.scriptPath, path];
+        extractor.running = true;
+    }
     function cycle() {
         var i = names.indexOf(variant);
         setVariant(names[(i + 1 + names.length) % names.length]);
     }
 
     // ---- Fonts ---------------------------------------------------------------
-    readonly property string fontFamily: "monospace"
-    readonly property string iconFont: "AtkynsonMono Nerd Font"
+    // Proportional UI font for all labels; Nerd Font for glyph icons; a
+    // monospace family kept available for anything that needs fixed width.
+    readonly property string fontFamily: "Adwaita Sans"
+    readonly property string monoFont:   "monospace"
+    readonly property string iconFont: "MesloLGS Nerd Font"
 
     // ---- Palettes ------------------------------------------------------------
     // Each palette provides the raw ramp; roles/surfaces below are derived.
+    readonly property string scriptPath:
+        Quickshell.env("HOME") + "/.config/quickshell/scripts/wallpaper-colors.py"
+
+    // A safe fallback used before the first wallpaper palette is generated.
+    readonly property var _wallpaperFallback: ({
+        dark: true, base: "#1e1e2e", mantle: "#181825", crust: "#11111b",
+        surface0: "#313244", surface1: "#45475a", surface2: "#585b70",
+        text: "#cdd6f4", subtext: "#a6adc8", blue: "#89b4fa",
+        red: "#f38ba8", green: "#a6e3a1", yellow: "#f9e2af", onAccent: "#11111b"
+    })
+
     readonly property var palettes: ({
+        "wallpaper": (root._wallpaperPalette && root._wallpaperPalette.base)
+            ? root._wallpaperPalette : root._wallpaperFallback,
         "mocha": {
             dark: true, base: "#1e1e2e", mantle: "#181825", crust: "#11111b",
             surface0: "#313244", surface1: "#45475a", surface2: "#585b70",
@@ -85,6 +115,11 @@ Singleton {
     readonly property color text:     p.text
     readonly property color subtext:  p.subtext
     readonly property color accent:   p.blue
+    // Lightened accent used as the second stop of accent gradients.
+    readonly property color accentAlt: Qt.lighter(p.blue, 1.22)
+    // Default color for bar/widget glyph icons, so they stand out from labels.
+    // Follows the active theme (accent color of the current palette).
+    readonly property color icon:     p.blue
     readonly property color hi:       p.surface0
     readonly property color muted:    p.surface2
     readonly property color border:   p.surface1
@@ -116,6 +151,37 @@ Singleton {
 
     readonly property int barHeight:    32
     readonly property int panelPadding: 12
+
+    // ---- Floating layout -----------------------------------------------------
+    // Outer gap between the bar and the screen edges, and the gap between the
+    // separate bar "pods" (left / center / right islands).
+    readonly property int barMargin: 8   // space around the floating bar
+    readonly property int barGap:    8   // space between pods
+    readonly property int podPadding: 6  // inner horizontal padding of a pod
+
+    // ---- Shadows -------------------------------------------------------------
+    // Soft drop-shadow tokens shared by the bar, popups, toasts and launcher.
+    readonly property color shadowColor: "#80000000"
+    readonly property real  shadowBlur:  1.0  // MultiEffect blur amount (0..1+)
+    readonly property real  shadowY:     2    // vertical offset
+    readonly property real  shadowScale: 1.0
+
+    // ---- Wallpaper color extraction -----------------------------------------
+    Process {
+        id: extractor
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var out = this.text.trim();
+                if (out.length === 0)
+                    return;
+                try {
+                    root._wallpaperPalette = JSON.parse(out);
+                } catch (e) {
+                    console.warn("Theme: failed to parse wallpaper palette:", e);
+                }
+            }
+        }
+    }
 
     // ---- Persistence ---------------------------------------------------------
     FileView {

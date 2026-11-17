@@ -34,6 +34,7 @@ Item {
 
     // Fallback: first letter of the title if the icon fails to load.
     Text {
+        font.family: Svc.Theme.fontFamily
         anchors.centerIn: parent
         visible: img.status !== Image.Ready
         text: (root.item.title || "?").slice(0, 1).toUpperCase()

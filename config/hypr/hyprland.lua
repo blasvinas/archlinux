@@ -55,7 +55,7 @@ hl.config({
 		blur = {
 			enabled = true,
 			size = 5,
-			passes = 1,
+			passes = 3,
 		},
 	},
 
@@ -115,16 +115,7 @@ hl.layer_rule({
 -- -----------------------------------------------------------------------------
 hl.on("hyprland.start", function()
 	hl.exec_cmd("quickshell")
-	-- Wallpaper is rendered by the Quickshell bar.
-	-- hl.exec_cmd("waypaper --restore")
-	-- Notifications are handled by the Quickshell bar.
-	-- hl.exec_cmd("sawync")
-	-- Network and Bluetooth are handled by the Quickshell bar widgets.
-	-- hl.exec_cmd("nm-applet --indicator")
-	-- hl.exec_cmd("blueman-applet")
 	hl.exec_cmd("hypridle")
-	-- hl.exec_cmd("hyprpaper")
-	-- hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 	hl.exec_cmd("foot --server")
 	hl.exec_cmd("xrdb -load ~/.Xresources")
 	hl.exec_cmd("wl-paste --watch cliphist store")
@@ -138,18 +129,17 @@ end)
 -- Application Launchers & Management
 hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
 hl.bind("SUPER + M", hl.dsp.exec_cmd("thunderbird"))
+hl.bind("SUPER + L", hl.dsp.exec_cmd("quickshell ipc call launcher toggle"))
 hl.bind("SUPER + O", hl.dsp.exec_cmd("libreoffice"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("1password"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
-hl.bind("SUPER + R", hl.dsp.exec_cmd("quickshell ipc call launcher toggle"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("quickshell ipc call launcher toggle"))
-hl.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("quickshell ipc call theme cycle"))
-hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd("ghostty"))
+hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("quickshell ipc call wallpaper toggle"))
 hl.bind("SUPER + X", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
-hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind("SUPER + SHIFT + F", hl.dsp.window.float({ action = "toggle" }))
+hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
+hl.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("quickshell ipc call theme cycle"))
 hl.bind("SUPER + code:36", hl.dsp.exec_cmd("footclient"))
 hl.bind("SUPER + RETURN", hl.dsp.exec_cmd("ghostty"))
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))

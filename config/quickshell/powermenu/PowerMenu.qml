@@ -21,6 +21,30 @@ PanelWindow {
 
     // Index of the destructive action awaiting a confirming second click.
     property int confirmIndex: -1
+    // Index of the action currently highlighted via the keyboard.
+    property int selectedIndex: 0
+    readonly property int columns: 3
+
+    // Activate the action at the given index (mirrors a tile click).
+    function activate(index) {
+        var a = actions[index];
+        if (a.danger && confirmIndex !== index) {
+            confirmIndex = index;
+            return;
+        }
+        close();
+        a.run();
+    }
+
+    // Move keyboard selection by a grid delta, clamped to valid actions.
+    function move(delta) {
+        var n = actions.length;
+        var next = selectedIndex + delta;
+        if (next < 0) next = 0;
+        if (next > n - 1) next = n - 1;
+        selectedIndex = next;
+        confirmIndex = -1;
+    }
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "quickshell-powermenu"
@@ -31,7 +55,7 @@ PanelWindow {
     color: "transparent"
     visible: false
 
-    function open() { confirmIndex = -1; visible = true; grab.forceActiveFocus(); }
+    function open() { confirmIndex = -1; selectedIndex = 0; visible = true; grab.forceActiveFocus(); }
     function close() { visible = false; }
     function toggle() { if (visible) close(); else open(); }
 
@@ -47,13 +71,27 @@ PanelWindow {
     ]
 
     MouseArea { anchors.fill: parent; onClicked: root.close() }
-    Rectangle { anchors.fill: parent; color: Svc.Theme.dim }
+    Rectangle {
+        anchors.fill: parent
+        color: Svc.Theme.dim
+        opacity: root.visible ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
+    }
 
     Item {
         id: grab
         anchors.fill: parent
         focus: root.visible
         Keys.onEscapePressed: root.close()
+        Keys.onLeftPressed: root.move(-1)
+        Keys.onRightPressed: root.move(1)
+        Keys.onUpPressed: root.move(-root.columns)
+        Keys.onDownPressed: root.move(root.columns)
+        Keys.onReturnPressed: root.activate(root.selectedIndex)
+        Keys.onEnterPressed: root.activate(root.selectedIndex)
+        Keys.onSpacePressed: root.activate(root.selectedIndex)
+        Keys.onTabPressed: root.move(1)
+        Keys.onBacktabPressed: root.move(-1)
     }
 
     Rectangle {
@@ -65,6 +103,12 @@ PanelWindow {
         border.color: Svc.Theme.border
         border.width: 1
 
+        // Entrance animation: fade in and scale up slightly when opened.
+        opacity: root.visible ? 1 : 0
+        scale: root.visible ? 1 : 0.94
+        Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutQuad } }
+        Behavior on scale { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
+
         MouseArea { anchors.fill: parent }
 
         Column {
@@ -72,6 +116,7 @@ PanelWindow {
             spacing: 16
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 id: title
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Session"
@@ -94,16 +139,17 @@ PanelWindow {
                         required property int index
                         readonly property bool confirming: root.confirmIndex === index
                         readonly property bool danger: modelData.danger
-                        readonly property bool invert: confirming || (tile.containsMouse && danger)
+                        readonly property bool selected: tile.containsMouse || root.selectedIndex === index
+                        readonly property bool invert: confirming || (selected && danger)
 
                         width: 96
                         height: 84
                         radius: Svc.Theme.radiusLarge
                         color: confirming ? Svc.Theme.danger
-                            : tile.containsMouse
+                            : selected
                                 ? (danger ? Svc.Theme.danger : Svc.Theme.hi)
                                 : Svc.Theme.base
-                        border.color: (confirming || tile.containsMouse)
+                        border.color: (confirming || selected)
                             ? (danger ? Svc.Theme.danger : Svc.Theme.accent)
                             : Svc.Theme.hi
                         border.width: 1
@@ -119,6 +165,7 @@ PanelWindow {
                                 color: invert ? Svc.Theme.onAccent : Svc.Theme.text
                             }
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: confirming ? "Confirm?" : modelData.label
                                 font.pixelSize: 12
@@ -132,14 +179,8 @@ PanelWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (danger && !confirming) {
-                                    root.confirmIndex = index;
-                                    return;
-                                }
-                                root.close();
-                                modelData.run();
-                            }
+                            onEntered: root.selectedIndex = index
+                            onClicked: root.activate(index)
                         }
                     }
                 }

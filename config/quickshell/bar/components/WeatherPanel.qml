@@ -3,7 +3,7 @@ import Quickshell.Hyprland
 import QtQuick
 import "../../services" as Svc
 
-// Dropdown with current conditions, details, and a 3-day forecast.
+// Dropdown: current conditions, details, hourly strip and a 7-day forecast.
 PopupWindow {
     id: pop
 
@@ -19,7 +19,7 @@ PopupWindow {
     }
     anchor.rect.y: barWindow ? barWindow.height : 32
 
-    implicitWidth: 320
+    implicitWidth: 360
     implicitHeight: content.implicitHeight
     visible: false
     color: "transparent"
@@ -38,6 +38,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -47,12 +50,15 @@ PopupWindow {
             padding: Svc.Theme.panelPadding
             spacing: 10
 
+            readonly property real innerWidth: width - 2 * padding
+
             // Header: location + unit toggle + refresh
             Item {
-                width: parent.width - 24
+                width: parent.innerWidth
                 height: 20
 
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - 60
@@ -69,6 +75,7 @@ PopupWindow {
                     spacing: 12
 
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.useFahrenheit ? "°F" : "°C"
                         color: Svc.Theme.accent
                         font.pixelSize: 13
@@ -102,7 +109,7 @@ PopupWindow {
 
             // Current conditions
             Row {
-                width: parent.width - 24
+                width: parent.innerWidth
                 spacing: 12
 
                 Text {
@@ -115,17 +122,20 @@ PopupWindow {
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.temp + Svc.Weather.unit
                         color: Svc.Theme.text
                         font.pixelSize: 30
                         font.bold: true
                     }
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.description
                         color: Svc.Theme.subtext
                         font.pixelSize: 12
                     }
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         text: "Feels like " + Svc.Weather.feels + Svc.Weather.unit
                         color: Svc.Theme.subtext
                         font.pixelSize: 11
@@ -133,11 +143,11 @@ PopupWindow {
                 }
             }
 
-            Rectangle { width: parent.width - 24; height: 1; color: Svc.Theme.hi }
+            Rectangle { width: parent.innerWidth; height: 1; color: Svc.Theme.hi }
 
             // Detail chips
             Grid {
-                width: parent.width - 24
+                width: parent.innerWidth
                 columns: 2
                 rowSpacing: 6
                 columnSpacing: 12
@@ -161,6 +171,7 @@ PopupWindow {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             text: modelData.label
                             color: Svc.Theme.text
                             font.pixelSize: 12
@@ -170,43 +181,133 @@ PopupWindow {
                 }
             }
 
-            Rectangle { width: parent.width - 24; height: 1; color: Svc.Theme.hi }
+            Rectangle { width: parent.innerWidth; height: 1; color: Svc.Theme.hi }
 
-            // 3-day forecast
-            Row {
-                width: parent.width - 24
+            // Hourly forecast (horizontally scrollable)
+            ListView {
+                id: hourlyView
+                width: parent.innerWidth
+                height: 84
+                orientation: ListView.Horizontal
+                clip: true
+                spacing: 4
+                boundsBehavior: Flickable.StopAtBounds
+                model: Svc.Weather.hourly
+
+                delegate: Column {
+                    required property var modelData
+                    width: 46
+                    height: hourlyView.height
+                    spacing: 4
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: modelData.hour
+                        font.family: Svc.Theme.fontFamily
+                        font.pixelSize: 11
+                        font.bold: modelData.hour === "Now"
+                        color: modelData.hour === "Now" ? Svc.Theme.accent : Svc.Theme.subtext
+                    }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Svc.Weather.iconFor(modelData.code, modelData.isDay)
+                        font.family: Svc.Theme.iconFont
+                        font.pixelSize: 20
+                        color: Svc.Theme.text
+                    }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: (Svc.Weather.useFahrenheit ? modelData.tempF : modelData.tempC) + "°"
+                        font.family: Svc.Theme.fontFamily
+                        font.pixelSize: 12
+                        font.bold: true
+                        color: Svc.Theme.text
+                    }
+                    Row {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 1
+                        visible: modelData.pop > 0
+                        Text {
+                            text: String.fromCodePoint(0xF0597)
+                            font.family: Svc.Theme.iconFont
+                            font.pixelSize: 9
+                            color: Svc.Theme.accent
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        Text {
+                            text: modelData.pop + "%"
+                            font.family: Svc.Theme.fontFamily
+                            font.pixelSize: 9
+                            color: Svc.Theme.accent
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+                }
+            }
+
+            Rectangle { width: parent.innerWidth; height: 1; color: Svc.Theme.hi }
+
+            // 7-day forecast (one row per day)
+            Column {
+                width: parent.innerWidth
+                spacing: 2
+
                 Repeater {
                     model: Svc.Weather.forecast
-                    delegate: Column {
+                    delegate: Item {
                         required property var modelData
-                        width: (parent.width) / 3
-                        spacing: 3
+                        width: parent.width
+                        height: 26
+
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 46
                             text: modelData.day
-                            color: Svc.Theme.subtext
-                            font.pixelSize: 11
-                            font.bold: true
+                            font.family: Svc.Theme.fontFamily
+                            font.pixelSize: 12
+                            font.bold: modelData.day === "Today"
+                            color: modelData.day === "Today" ? Svc.Theme.text : Svc.Theme.subtext
                         }
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 54
+                            anchors.verticalCenter: parent.verticalCenter
                             text: Svc.Weather.iconFor(modelData.code, true)
                             font.family: Svc.Theme.iconFont
-                            font.pixelSize: 22
-                            color: Svc.Theme.text
+                            font.pixelSize: 17
+                            color: Svc.Theme.icon
                         }
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: (Svc.Weather.useFahrenheit ? modelData.maxF : modelData.maxC) + "°"
-                            color: Svc.Theme.text
-                            font.pixelSize: 12
-                            font.bold: true
-                        }
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: (Svc.Weather.useFahrenheit ? modelData.minF : modelData.minC) + "°"
-                            color: Svc.Theme.subtext
+                            anchors.left: parent.left
+                            anchors.leftMargin: 84
+                            anchors.right: hilo.left
+                            anchors.rightMargin: 8
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: modelData.desc
+                            font.family: Svc.Theme.fontFamily
                             font.pixelSize: 11
+                            color: Svc.Theme.subtext
+                            elide: Text.ElideRight
+                        }
+                        Row {
+                            id: hilo
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 6
+                            Text {
+                                text: (Svc.Weather.useFahrenheit ? modelData.maxF : modelData.maxC) + "°"
+                                font.family: Svc.Theme.fontFamily
+                                font.pixelSize: 12
+                                font.bold: true
+                                color: Svc.Theme.text
+                            }
+                            Text {
+                                text: (Svc.Weather.useFahrenheit ? modelData.minF : modelData.minC) + "°"
+                                font.family: Svc.Theme.fontFamily
+                                font.pixelSize: 12
+                                color: Svc.Theme.muted
+                            }
                         }
                     }
                 }

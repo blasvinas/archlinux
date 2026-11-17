@@ -28,9 +28,14 @@ PanelWindow {
     color: "transparent"
     visible: false
 
-    function open() { visible = true; grab.forceActiveFocus(); }
+    function open() {
+        visible = true;
+        // Start the keyboard selection on the current wallpaper if possible.
+        grid.selectCurrent();
+        grid.forceActiveFocus();
+    }
     function close() { visible = false; }
-    function toggle() { visible = !visible; }
+    function toggle() { if (visible) close(); else open(); }
 
     Component.onCompleted: Svc.Overlays.wallpaperPicker = this
 
@@ -38,13 +43,7 @@ PanelWindow {
     MouseArea { anchors.fill: parent; onClicked: root.close() }
     Rectangle { anchors.fill: parent; color: Svc.Theme.dim }
 
-    // Escape closes.
-    Item {
-        id: grab
-        anchors.fill: parent
-        focus: root.visible
-        Keys.onEscapePressed: root.close()
-    }
+
 
     Rectangle {
         id: box
@@ -69,6 +68,7 @@ PanelWindow {
                 height: 28
 
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wallpaper"
@@ -122,12 +122,50 @@ PanelWindow {
                 model: Svc.Wallpaper.model
                 boundsBehavior: Flickable.StopAtBounds
 
+                // Keyboard focus + navigation.
+                focus: root.visible
+                keyNavigationEnabled: true
+                keyNavigationWraps: false
+                highlightFollowsCurrentItem: true
+                currentIndex: 0
+
+                // Point the keyboard cursor at the active wallpaper (if any).
+                function selectCurrent() {
+                    for (var i = 0; i < count; i++) {
+                        if (model.get(i, "filePath") === Svc.Wallpaper.current) {
+                            currentIndex = i;
+                            positionViewAtIndex(i, GridView.Contain);
+                            return;
+                        }
+                    }
+                    currentIndex = 0;
+                }
+
+                Keys.onEscapePressed: root.close()
+                Keys.onReturnPressed: applyCurrent()
+                Keys.onEnterPressed: applyCurrent()
+                Keys.onSpacePressed: applyCurrent()
+                Keys.onPressed: (e) => {
+                    if (e.key === Qt.Key_R) {
+                        Svc.Wallpaper.random();
+                        selectCurrent();
+                        e.accepted = true;
+                    }
+                }
+
+                function applyCurrent() {
+                    if (currentIndex >= 0 && currentIndex < count)
+                        Svc.Wallpaper.setWallpaper(model.get(currentIndex, "filePath"));
+                }
+
                 delegate: Item {
                     required property var model
+                    required property int index
                     width: grid.cellWidth
                     height: grid.cellHeight
 
                     readonly property bool active: model.filePath === Svc.Wallpaper.current
+                    readonly property bool selected: grid.currentIndex === index
 
                     Rectangle {
                         anchors.fill: parent
@@ -136,8 +174,9 @@ PanelWindow {
                         color: Svc.Theme.base
                         clip: true
                         border.color: active ? Svc.Theme.accent
+                            : selected ? Svc.Theme.text
                             : (thumbHover.hovered ? Svc.Theme.subtext : "transparent")
-                        border.width: active ? 3 : 2
+                        border.width: (active || selected) ? 3 : 2
 
                         Image {
                             anchors.fill: parent
@@ -171,7 +210,10 @@ PanelWindow {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: Svc.Wallpaper.setWallpaper(model.filePath)
+                            onClicked: {
+                                grid.currentIndex = index;
+                                Svc.Wallpaper.setWallpaper(model.filePath);
+                            }
                         }
                     }
                 }

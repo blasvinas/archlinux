@@ -43,12 +43,22 @@ Row {
             width: focused ? 30 : 20
             radius: Svc.Theme.radiusPill
 
-            color: focused ? Svc.Theme.accent
+            // Focused workspace gets a subtle two-stop accent gradient; other
+            // states fall back to a flat fill via `color`.
+            gradient: focused ? focusGrad : null
+            color: focused ? "transparent"
                  : active ? Svc.Theme.muted
                  : occupied ? Svc.Theme.hi
                  : "transparent"
             border.color: (focused || active || occupied) ? "transparent" : Svc.Theme.border
             border.width: 1
+
+            Gradient {
+                id: focusGrad
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: Svc.Theme.accent }
+                GradientStop { position: 1.0; color: Svc.Theme.accentAlt }
+            }
 
             Behavior on width { NumberAnimation { duration: 130; easing.type: Easing.OutCubic } }
             Behavior on color { ColorAnimation { duration: 130 } }

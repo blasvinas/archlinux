@@ -43,6 +43,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -53,6 +56,7 @@ PopupWindow {
             spacing: 10
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 text: "Battery"
                 color: Svc.Theme.subtext
                 font.pixelSize: 11
@@ -77,6 +81,7 @@ PopupWindow {
                     spacing: 2
 
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         text: Math.round(Svc.Battery.percent * 100) + "%"
                         color: Svc.Theme.text
                         font.pixelSize: 22
@@ -93,6 +98,7 @@ PopupWindow {
                         }
                     }
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         visible: Svc.Battery.secondsRemaining > 0
                         text: (Svc.Battery.charging ? "Full in " : "")
                               + Svc.Battery.formatTime(Svc.Battery.secondsRemaining)
@@ -115,6 +121,7 @@ PopupWindow {
                     color: Svc.Theme.subtext
                 }
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     text: "Health: " + Math.round(Svc.Battery.healthPercent) + "%"
                     color: Svc.Theme.subtext
                     font.pixelSize: 12
@@ -130,6 +137,7 @@ PopupWindow {
             }
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 visible: Svc.Battery.peripherals.length > 0
                 text: "Devices"
                 color: Svc.Theme.subtext
@@ -152,6 +160,7 @@ PopupWindow {
                         color: pop.levelColor(modelData.percentage, false)
                     }
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width - 90
                         elide: Text.ElideRight

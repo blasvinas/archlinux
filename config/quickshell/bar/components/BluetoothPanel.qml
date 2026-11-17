@@ -39,6 +39,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -54,6 +57,7 @@ PopupWindow {
                 height: 24
 
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Bluetooth"
                     color: Svc.Theme.text
@@ -108,12 +112,14 @@ PopupWindow {
             Rectangle { width: parent.width - 20; height: 1; color: Svc.Theme.hi }
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 visible: !Svc.Bt.available
                 text: "No Bluetooth adapter"
                 color: Svc.Theme.subtext
                 font.pixelSize: 13
             }
             Text {
+                font.family: Svc.Theme.fontFamily
                 visible: Svc.Bt.available && !Svc.Bt.enabled
                 text: "Bluetooth is turned off"
                 color: Svc.Theme.subtext
@@ -141,6 +147,7 @@ PopupWindow {
                         height: 40
                         radius: Svc.Theme.radiusMedium
                         color: mouse.containsMouse || parent.expanded ? Svc.Theme.hi : "transparent"
+                        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
 
                         Row {
                             anchors.left: parent.left
@@ -162,6 +169,7 @@ PopupWindow {
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: parent.width - 120
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     text: modelData.name || modelData.address
                                     color: modelData.connected ? Svc.Theme.accent : Svc.Theme.text
                                     font.pixelSize: 13
@@ -170,6 +178,7 @@ PopupWindow {
                                     width: parent.width
                                 }
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     property string st: modelData.connected ? "Connected"
                                         : (modelData.paired ? "Paired" : "Not paired")
                                     text: modelData.batteryAvailable
@@ -224,6 +233,7 @@ PopupWindow {
                                 width: 110; height: 30; radius: Svc.Theme.radiusMedium
                                 color: modelData.connected ? Svc.Theme.danger : Svc.Theme.accent
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: modelData.connected ? "Disconnect" : "Connect"
                                     color: Svc.Theme.crust
@@ -244,6 +254,7 @@ PopupWindow {
                                 border.color: Svc.Theme.danger
                                 border.width: 1
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: "Forget"
                                     color: Svc.Theme.danger

@@ -14,6 +14,7 @@ Item {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
@@ -30,7 +31,7 @@ Item {
             font.family: Svc.Theme.iconFont
             font.pixelSize: 16
             color: Svc.Notifications.doNotDisturb ? Svc.Theme.danger
-                 : Svc.Notifications.count > 0 ? Svc.Theme.accent : Svc.Theme.text
+                 : Svc.Notifications.count > 0 ? Svc.Theme.accent : Svc.Theme.icon
         }
 
         Text {

@@ -20,6 +20,16 @@ Rectangle {
     border.color: Svc.Theme.border
     border.width: 1
 
+    // Entrance animation: fade in while sliding from the right.
+    opacity: 0
+    transform: Translate {
+        id: toastSlide
+        x: 40
+        Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+    }
+    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }
+    Component.onCompleted: { opacity = 1; toastSlide.x = 0; }
+
     // Urgency stripe.
     Rectangle {
         width: 4
@@ -78,6 +88,7 @@ Rectangle {
                 visible: img.status !== Image.Ready
                 color: Svc.Theme.hi
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.centerIn: parent
                     text: (card.notif.appName || "?").slice(0, 1).toUpperCase()
                     color: Svc.Theme.text
@@ -93,6 +104,7 @@ Rectangle {
             spacing: 3
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 width: parent.width
                 text: card.notif.appName || ""
                 color: Svc.Theme.accent
@@ -102,6 +114,7 @@ Rectangle {
                 visible: text.length > 0
             }
             Text {
+                font.family: Svc.Theme.fontFamily
                 width: parent.width
                 text: card.notif.summary || ""
                 color: Svc.Theme.text
@@ -112,6 +125,7 @@ Rectangle {
                 elide: Text.ElideRight
             }
             Text {
+                font.family: Svc.Theme.fontFamily
                 width: parent.width
                 text: card.notif.body || ""
                 color: Svc.Theme.subtext
@@ -138,6 +152,7 @@ Rectangle {
                         radius: Svc.Theme.radiusSmall
                         color: aMouse.containsMouse ? Svc.Theme.border : Svc.Theme.hi
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             id: aTxt
                             anchors.centerIn: parent
                             text: modelData.text

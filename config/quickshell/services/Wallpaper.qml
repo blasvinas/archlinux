@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import Qt.labs.folderlistmodel
 import QtQuick
+import "." as Svc
 
 // Wallpaper manager: lists images from a folder, tracks the current wallpaper
 // (persisted), and exposes actions. Rendering is done by WallpaperView.
@@ -15,6 +16,14 @@ Singleton {
 
     // Absolute path of the active wallpaper.
     property string current: ""
+
+    // When the wallpaper changes, regenerate the wallpaper-derived theme
+    // palette so it stays in sync. (Theme applies it live if the active
+    // variant is "wallpaper".)
+    onCurrentChanged: {
+        if (current !== "")
+            Svc.Theme.generateFromWallpaper(current);
+    }
 
     // Directory listing model (usable directly as a view model).
     property alias model: fm

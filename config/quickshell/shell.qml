@@ -7,6 +7,8 @@ import "notifications"
 import "wallpaper"
 import "clipboard"
 import "powermenu"
+import "dashboard"
+import "lock"
 import "services" as Svc
 
 ShellRoot {
@@ -41,6 +43,12 @@ ShellRoot {
 
     // Session / power menu overlay.
     PowerMenu {}
+
+    // Caelestia-style dashboard overlay.
+    Dashboard {}
+
+    // Native session lock (ext-session-lock).
+    Lock {}
 
     // Allow toggling from a keybind:
     //   quickshell ipc call launcher toggle
@@ -92,5 +100,25 @@ ShellRoot {
 
         function toggle(): void { Svc.Overlays.power.toggle(); }
         function open(): void { Svc.Overlays.power.open(); }
+    }
+
+    // Dashboard:
+    //   quickshell ipc call dashboard toggle
+    IpcHandler {
+        target: "dashboard"
+
+        function toggle(): void { Svc.Overlays.dashboard.toggle(); }
+        function open(): void { Svc.Overlays.dashboard.open(); }
+        function close(): void { Svc.Overlays.dashboard.close(); }
+    }
+
+    // Session lock:
+    //   quickshell ipc call lock lock
+    IpcHandler {
+        target: "lock"
+
+        function lock(): void { Svc.Lock.lock(); }
+        function toggle(): void { Svc.Lock.toggle(); }
+        function isLocked(): bool { return Svc.Lock.locked; }
     }
 }

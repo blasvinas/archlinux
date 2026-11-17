@@ -15,13 +15,14 @@ Item {
         if (Svc.Battery.charging) return Svc.Theme.success;
         if (Svc.Battery.percent <= 0.15) return Svc.Theme.danger;
         if (Svc.Battery.percent <= 0.30) return Svc.Theme.warning;
-        return Svc.Theme.text;
+        return Svc.Theme.icon;
     }
 
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {

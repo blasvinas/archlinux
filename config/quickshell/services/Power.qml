@@ -1,16 +1,20 @@
 pragma Singleton
 
 import Quickshell
+import "." as Svc
 
 // Session / power actions.
 Singleton {
     id: root
 
     function lock() {
-        Quickshell.execDetached(["hyprlock"]);
+        // Native quickshell session lock (see lock/Lock.qml).
+        Svc.Lock.lock();
     }
     function logout() {
-        Quickshell.execDetached(["hyprctl", "dispatch", "exit"]);
+        // Hyprland 0.56+ parses dispatch args as Lua, so "hyprctl dispatch exit"
+        // no longer works. Terminate the login session cleanly instead.
+        Quickshell.execDetached(["loginctl", "terminate-session", "self"]);
     }
     function suspend() {
         Quickshell.execDetached(["systemctl", "suspend"]);

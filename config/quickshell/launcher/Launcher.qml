@@ -131,6 +131,8 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Svc.Theme.dim
+        opacity: root.visible ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
     }
 
     // ---- Launcher box --------------------------------------------------------
@@ -145,6 +147,13 @@ PanelWindow {
         color: Svc.Theme.toastBg
         border.color: Svc.Theme.border
         border.width: 1
+
+        // Entrance animation: fade in and scale up slightly when opened.
+        opacity: root.visible ? 1 : 0
+        scale: root.visible ? 1 : 0.96
+        transformOrigin: Item.Top
+        Behavior on opacity { NumberAnimation { duration: 160; easing.type: Easing.OutQuad } }
+        Behavior on scale { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
         // Swallow clicks so they don't reach the dismiss area.
         MouseArea { anchors.fill: parent; acceptedButtons: Qt.LeftButton | Qt.RightButton }
@@ -200,6 +209,7 @@ PanelWindow {
                         }
 
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             anchors.fill: parent
                             verticalAlignment: Text.AlignVCenter
                             text: "Search applications…"
@@ -259,6 +269,7 @@ PanelWindow {
                                 visible: appIcon.status !== Image.Ready
                                 color: Svc.Theme.hi
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: (modelData.name || "?").slice(0, 1).toUpperCase()
                                     color: Svc.Theme.text
@@ -272,6 +283,7 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             width: parent.width - 46 - (hasActions ? 28 : 0)
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 text: modelData.name
                                 color: Svc.Theme.text
                                 font.pixelSize: 14
@@ -280,6 +292,7 @@ PanelWindow {
                                 width: parent.width
                             }
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 text: modelData.comment || modelData.genericName || ""
                                 color: Svc.Theme.subtext
                                 font.pixelSize: 11
@@ -334,6 +347,7 @@ PanelWindow {
 
                 // Empty state
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.centerIn: parent
                     visible: root.results.length === 0
                     text: "No results"
@@ -376,6 +390,7 @@ PanelWindow {
                     radius: Svc.Theme.radiusSmall
                     color: openHover.hovered ? Svc.Theme.hi : "transparent"
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         anchors.left: parent.left
                         anchors.leftMargin: 8
                         anchors.verticalCenter: parent.verticalCenter
@@ -407,6 +422,7 @@ PanelWindow {
                         radius: Svc.Theme.radiusSmall
                         color: actHover.hovered ? Svc.Theme.hi : "transparent"
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             anchors.left: parent.left
                             anchors.leftMargin: 8
                             anchors.right: parent.right

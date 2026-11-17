@@ -36,6 +36,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -46,6 +49,7 @@ PopupWindow {
             spacing: 10
 
             Text {
+                font.family: Svc.Theme.fontFamily
                 text: "Brightness"
                 color: Svc.Theme.subtext
                 font.pixelSize: 11

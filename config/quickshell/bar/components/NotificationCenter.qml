@@ -36,6 +36,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -51,6 +54,7 @@ PopupWindow {
                 height: 24
 
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Notifications"
                     color: Svc.Theme.text
@@ -115,6 +119,7 @@ PopupWindow {
                         color: Svc.Theme.hi
                     }
                     Text {
+                        font.family: Svc.Theme.fontFamily
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: Svc.Notifications.doNotDisturb
                             ? "Do not disturb is on" : "No notifications"
@@ -171,6 +176,7 @@ PopupWindow {
                                 visible: hi.status !== Image.Ready
                                 color: Svc.Theme.hi
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: (modelData.appName || "?").slice(0, 1).toUpperCase()
                                     color: Svc.Theme.text
@@ -184,6 +190,7 @@ PopupWindow {
                             width: parent.width - 32 - 10 - 20
                             spacing: 2
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 width: parent.width
                                 text: modelData.appName || ""
                                 color: Svc.Theme.accent
@@ -193,6 +200,7 @@ PopupWindow {
                                 visible: text.length > 0
                             }
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 width: parent.width
                                 text: modelData.summary || ""
                                 color: Svc.Theme.text
@@ -203,6 +211,7 @@ PopupWindow {
                                 elide: Text.ElideRight
                             }
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 width: parent.width
                                 text: modelData.body || ""
                                 color: Svc.Theme.subtext

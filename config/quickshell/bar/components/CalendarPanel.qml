@@ -22,7 +22,7 @@ PopupWindow {
     }
     anchor.rect.y: barWindow ? barWindow.height : 32
 
-    implicitWidth: 280
+    implicitWidth: 300
     implicitHeight: content.implicitHeight
     visible: false
     color: "transparent"
@@ -42,6 +42,9 @@ PopupWindow {
         implicitHeight: cal.implicitHeight + 24
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 

@@ -12,4 +12,5 @@ Singleton {
     property var wallpaperPicker
     property var clipboard
     property var power
+    property var dashboard
 }

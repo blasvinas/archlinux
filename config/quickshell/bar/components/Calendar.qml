@@ -1,7 +1,8 @@
 import QtQuick
 import "../../services" as Svc
 
-// Self-contained month calendar with navigation. No external deps.
+// Self-contained month calendar with navigation, week numbers, day selection
+// and a footer. No external deps.
 Column {
     id: root
 
@@ -11,17 +12,30 @@ Column {
 
     // "Today" for highlighting, refreshed when shown.
     property var today: new Date()
+    // Selected day (null = none). Shown in the footer.
+    property var selected: null
+
+    property bool showWeekNumbers: true
 
     readonly property var monthNames: [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ]
+    readonly property var fullDayNames: [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ]
     readonly property var dayNames: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+
+    readonly property real weekNumW: showWeekNumbers ? 22 : 0
+    readonly property real dayColW: (width - weekNumW) / 7
+    readonly property bool onCurrentMonth: viewYear === today.getFullYear()
+                                           && viewMonth === today.getMonth()
 
     function resetToToday() {
         today = new Date();
         viewYear = today.getFullYear();
         viewMonth = today.getMonth();
+        selected = null;
     }
 
     function prevMonth() {
@@ -33,26 +47,52 @@ Column {
         else viewMonth++;
     }
 
-    // 42 cells (6 weeks) including leading/trailing days from adjacent months.
-    readonly property var cells: {
+    function sameDay(a, b) {
+        return a && b && a.getFullYear() === b.getFullYear()
+            && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    // ISO-8601 week number for a given date.
+    function isoWeek(date) {
+        var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        var dayNum = (d.getUTCDay() + 6) % 7;      // Mon=0 … Sun=6
+        d.setUTCDate(d.getUTCDate() - dayNum + 3);  // nearest Thursday
+        var firstThursday = d.getTime();
+        d.setUTCMonth(0, 1);
+        if (d.getUTCDay() !== 4)
+            d.setUTCMonth(0, 1 + ((4 - d.getUTCDay()) + 7) % 7);
+        return 1 + Math.round((firstThursday - d.getTime()) / 604800000);
+    }
+
+    // 6 weeks, each with a week number and 7 real-date cells.
+    readonly property var weeks: {
         var y = viewYear, m = viewMonth;
-        var startDow = new Date(y, m, 1).getDay();
-        var daysInMonth = new Date(y, m + 1, 0).getDate();
-        var daysPrev = new Date(y, m, 0).getDate();
+        var startDow = new Date(y, m, 1).getDay();      // 0 = Sunday
+        var start = new Date(y, m, 1 - startDow);        // date of first cell
         var out = [];
-        for (var i = 0; i < startDow; i++)
-            out.push({ day: daysPrev - startDow + 1 + i, inMonth: false });
-        for (var d = 1; d <= daysInMonth; d++)
-            out.push({ day: d, inMonth: true });
-        var next = 1;
-        while (out.length < 42)
-            out.push({ day: next++, inMonth: false });
+        for (var w = 0; w < 6; w++) {
+            var days = [];
+            for (var i = 0; i < 7; i++) {
+                var dt = new Date(start.getFullYear(), start.getMonth(),
+                                  start.getDate() + w * 7 + i);
+                days.push({ date: dt, day: dt.getDate(),
+                            inMonth: dt.getMonth() === m,
+                            weekend: (i === 0 || i === 6) });
+            }
+            out.push({ weekNo: isoWeek(days[4].date), days: days });
+        }
         return out;
     }
 
     Component.onCompleted: resetToToday()
 
     spacing: 8
+
+    // Change months by scrolling anywhere over the calendar.
+    WheelHandler {
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        onWheel: event => { if (event.angleDelta.y < 0) root.nextMonth(); else root.prevMonth(); }
+    }
 
     // ---- Header: month navigation --------------------------------------------
     Item {
@@ -76,11 +116,20 @@ Column {
         }
 
         Text {
+            id: title
+            font.family: Svc.Theme.fontFamily
             anchors.centerIn: parent
             text: root.monthNames[root.viewMonth] + " " + root.viewYear
-            color: Svc.Theme.text
+            color: titleHover.hovered ? Svc.Theme.accent : Svc.Theme.text
             font.pixelSize: 14
             font.bold: true
+            HoverHandler { id: titleHover }
+            MouseArea {
+                anchors.fill: parent
+                anchors.margins: -6
+                cursorShape: Qt.PointingHandCursor
+                onClicked: root.resetToToday()   // tap title to jump to today
+            }
         }
 
         Text {
@@ -103,16 +152,22 @@ Column {
     // ---- Weekday header ------------------------------------------------------
     Row {
         width: parent.width
+
+        // Spacer above the week-number column.
+        Item { width: root.weekNumW; height: 20; visible: root.showWeekNumbers }
+
         Repeater {
             model: root.dayNames
             delegate: Item {
                 required property var modelData
-                width: root.width / 7
+                required property int index
+                width: root.dayColW
                 height: 20
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.centerIn: parent
                     text: modelData
-                    color: Svc.Theme.subtext
+                    color: (index === 0 || index === 6) ? Svc.Theme.accent : Svc.Theme.subtext
                     font.pixelSize: 11
                     font.bold: true
                 }
@@ -120,40 +175,124 @@ Column {
         }
     }
 
-    // ---- Day grid ------------------------------------------------------------
-    Grid {
-        width: parent.width
-        columns: 7
+    // ---- Week rows -----------------------------------------------------------
+    Repeater {
+        model: root.weeks
+        delegate: Row {
+            required property var modelData
+            width: root.width
 
-        Repeater {
-            model: root.cells
-            delegate: Item {
-                required property var modelData
-                width: root.width / 7
-                height: root.width / 7
-
-                readonly property bool isToday: modelData.inMonth
-                    && root.viewYear === root.today.getFullYear()
-                    && root.viewMonth === root.today.getMonth()
-                    && modelData.day === root.today.getDate()
-
-                Rectangle {
+            // Week number.
+            Item {
+                width: root.weekNumW
+                height: root.dayColW
+                visible: root.showWeekNumbers
+                Text {
                     anchors.centerIn: parent
-                    width: 28
-                    height: 28
-                    radius: Svc.Theme.radiusPill
-                    color: isToday ? Svc.Theme.accent : "transparent"
+                    text: modelData.weekNo
+                    font.family: Svc.Theme.fontFamily
+                    font.pixelSize: 9
+                    color: Svc.Theme.muted
+                }
+            }
 
-                    Text {
+            Repeater {
+                model: modelData.days
+                delegate: Item {
+                    required property var modelData
+                    width: root.dayColW
+                    height: root.dayColW
+
+                    readonly property bool isToday: modelData.inMonth && root.sameDay(modelData.date, root.today)
+                    readonly property bool isSelected: root.sameDay(modelData.date, root.selected)
+
+                    Rectangle {
                         anchors.centerIn: parent
-                        text: modelData.day
-                        font.pixelSize: 12
-                        font.bold: isToday
-                        color: isToday ? Svc.Theme.crust
-                             : modelData.inMonth ? Svc.Theme.text
-                             : Svc.Theme.muted
+                        width: Math.min(30, parent.width - 2)
+                        height: width
+                        radius: Svc.Theme.radiusPill
+                        color: isToday ? Svc.Theme.accent
+                             : dayHover.hovered ? Svc.Theme.hover
+                             : "transparent"
+                        border.width: (isSelected && !isToday) ? 1.5 : 0
+                        border.color: Svc.Theme.accent
+
+                        Text {
+                            font.family: Svc.Theme.fontFamily
+                            anchors.centerIn: parent
+                            text: modelData.day
+                            font.pixelSize: 12
+                            font.bold: isToday || isSelected
+                            color: isToday ? Svc.Theme.crust
+                                 : !modelData.inMonth ? Svc.Theme.muted
+                                 : modelData.weekend ? Svc.Theme.subtext
+                                 : Svc.Theme.text
+                        }
+
+                        HoverHandler { id: dayHover }
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.selected = root.sameDay(modelData.date, root.selected)
+                                ? null : modelData.date
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    // ---- Footer: selected / today --------------------------------------------
+    Item {
+        width: parent.width
+        height: 1
+        Rectangle { width: parent.width; height: 1; color: Svc.Theme.hi }
+    }
+
+    Item {
+        width: parent.width
+        height: 20
+
+        Text {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.rightMargin: root.onCurrentMonth ? 0 : 60
+            anchors.verticalCenter: parent.verticalCenter
+            elide: Text.ElideRight
+            property var d: root.selected ? root.selected : root.today
+            text: (root.selected ? "" : "Today · ")
+                + root.fullDayNames[d.getDay()] + ", "
+                + d.getDate() + " " + root.monthNames[d.getMonth()] + " " + d.getFullYear()
+            font.family: Svc.Theme.fontFamily
+            font.pixelSize: 11
+            color: Svc.Theme.subtext
+        }
+
+        // "Today" pill — jump back when viewing another month.
+        Rectangle {
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            visible: !root.onCurrentMonth
+            width: todayLabel.implicitWidth + 16
+            height: 18
+            radius: height / 2
+            color: todayPillHover.hovered ? Svc.Theme.accent : "transparent"
+            border.width: 1
+            border.color: Svc.Theme.accent
+            Text {
+                id: todayLabel
+                anchors.centerIn: parent
+                text: "Today"
+                font.family: Svc.Theme.fontFamily
+                font.pixelSize: 10
+                font.bold: true
+                color: todayPillHover.hovered ? Svc.Theme.crust : Svc.Theme.accent
+            }
+            HoverHandler { id: todayPillHover }
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: root.resetToToday()
             }
         }
     }

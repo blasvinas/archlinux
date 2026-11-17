@@ -14,6 +14,7 @@ Item {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
@@ -26,7 +27,7 @@ Item {
             text: Svc.Bt.statusIcon()
             font.family: Svc.Theme.iconFont
             font.pixelSize: 16
-            color: Svc.Bt.connectedCount > 0 ? Svc.Theme.accent : Svc.Theme.text
+            color: Svc.Bt.connectedCount > 0 ? Svc.Theme.accent : Svc.Theme.icon
         }
 
         Text {

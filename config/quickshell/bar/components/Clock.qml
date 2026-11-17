@@ -21,6 +21,7 @@ Item {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
@@ -33,7 +34,8 @@ Item {
             text: String.fromCodePoint(0xF00ED) // calendar
             font.family: Svc.Theme.iconFont
             font.pixelSize: 15
-            color: mouse.containsMouse || panel.visible ? Svc.Theme.accent : Svc.Theme.text
+            color: mouse.containsMouse || panel.visible ? Svc.Theme.text : Svc.Theme.icon
+            Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
         }
 
         // Date
@@ -51,7 +53,7 @@ Item {
             text: String.fromCodePoint(0xF0150) // clock-outline
             font.family: Svc.Theme.iconFont
             font.pixelSize: 14
-            color: Svc.Theme.subtext
+            color: Svc.Theme.icon
         }
 
         // Time

@@ -16,6 +16,7 @@ Item {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || root.active ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Text {
@@ -24,7 +25,8 @@ Item {
         text: String.fromCodePoint(0xF0425) // power
         font.family: Svc.Theme.iconFont
         font.pixelSize: 16
-        color: mouse.containsMouse || root.active ? Svc.Theme.danger : Svc.Theme.text
+        color: mouse.containsMouse || root.active ? Svc.Theme.danger : Svc.Theme.icon
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     MouseArea {

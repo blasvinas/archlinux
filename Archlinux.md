@@ -165,12 +165,10 @@ options root=UUID=<your-root-partition-uuid> rw
 - cd ~/.config/hypr/
 - cp hyprland.conf hyprmand.conf.orig
 - cp ~/archlinx/config/hypr/hyprland.conf .
+- paru quickshell
 - paru rofi
 - paru network-manager-applet
 - paru wl-clipboard
-- paru waybar
-- paru waypaper
-- paru socat
 - paru pipewire
 - paru pipewire-pulse
 - paru pavucontrol
@@ -181,13 +179,9 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru hyprpaper
 - paru hyprlock
 - paru hypridle
-- paru yad
 - paru brightnessctl
 - paru yazi
 - paru poppler
-- paru swww
-- paru mpvpaper
-- paru swaync
 - paru npm
 - paru go
 - paru hyprpolkitagent

@@ -40,6 +40,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -51,6 +54,7 @@ PopupWindow {
 
             // ================= OUTPUT =================
             Text {
+                font.family: Svc.Theme.fontFamily
                 text: "Output"
                 color: Svc.Theme.subtext
                 font.pixelSize: 11
@@ -125,6 +129,7 @@ PopupWindow {
                         radius: Svc.Theme.radiusSmall
                         color: dmouse.containsMouse ? Svc.Theme.hi : "transparent"
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             anchors.left: parent.left
                             anchors.leftMargin: 8
                             anchors.verticalCenter: parent.verticalCenter
@@ -149,6 +154,7 @@ PopupWindow {
 
             // ================= INPUT =================
             Text {
+                font.family: Svc.Theme.fontFamily
                 text: "Input"
                 color: Svc.Theme.subtext
                 font.pixelSize: 11
@@ -220,6 +226,7 @@ PopupWindow {
                         radius: Svc.Theme.radiusSmall
                         color: smouse.containsMouse ? Svc.Theme.hi : "transparent"
                         Text {
+                            font.family: Svc.Theme.fontFamily
                             anchors.left: parent.left
                             anchors.leftMargin: 8
                             anchors.verticalCenter: parent.verticalCenter

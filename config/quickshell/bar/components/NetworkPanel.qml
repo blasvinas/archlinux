@@ -42,6 +42,9 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
+        opacity: pop.visible ? 1 : 0
+        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -57,6 +60,7 @@ PopupWindow {
                 height: 24
 
                 Text {
+                    font.family: Svc.Theme.fontFamily
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wi-Fi"
                     color: Svc.Theme.text
@@ -111,6 +115,7 @@ PopupWindow {
 
             // ---- Network list --------------------------------------------
             Text {
+                font.family: Svc.Theme.fontFamily
                 visible: !Svc.Network.wifiEnabled
                 text: "Wi-Fi is turned off"
                 color: Svc.Theme.subtext
@@ -137,6 +142,7 @@ PopupWindow {
                         height: 36
                         radius: Svc.Theme.radiusMedium
                         color: mouse.containsMouse || parent.expanded ? Svc.Theme.hi : "transparent"
+                        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
 
                         Row {
                             anchors.left: parent.left
@@ -152,6 +158,7 @@ PopupWindow {
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 text: modelData.ssid
                                 color: modelData.active ? Svc.Theme.accent : Svc.Theme.text
                                 font.pixelSize: 13
@@ -167,6 +174,7 @@ PopupWindow {
                             spacing: 6
 
                             Text {
+                                font.family: Svc.Theme.fontFamily
                                 visible: modelData.active
                                 text: "connected"
                                 color: Svc.Theme.subtext
@@ -219,6 +227,7 @@ PopupWindow {
                                 width: 110; height: 30; radius: Svc.Theme.radiusMedium
                                 color: Svc.Theme.danger
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: "Disconnect"
                                     color: Svc.Theme.crust
@@ -261,6 +270,7 @@ PopupWindow {
                                         pop.selectedSsid = "";
                                     }
                                     Text {
+                                        font.family: Svc.Theme.fontFamily
                                         anchors.fill: parent
                                         verticalAlignment: Text.AlignVCenter
                                         text: "Password"
@@ -274,6 +284,7 @@ PopupWindow {
                                 width: 84; height: 30; radius: Svc.Theme.radiusMedium
                                 color: Svc.Theme.accent
                                 Text {
+                                    font.family: Svc.Theme.fontFamily
                                     anchors.centerIn: parent
                                     text: "Connect"
                                     color: Svc.Theme.crust

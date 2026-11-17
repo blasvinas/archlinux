@@ -15,6 +15,7 @@ Item {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
         color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
@@ -27,7 +28,7 @@ Item {
             text: Svc.Network.signalIcon(Svc.Network.activeSignal, Svc.Network.activeSecure)
             font.family: Svc.Theme.iconFont
             font.pixelSize: 16
-            color: Svc.Theme.text
+            color: Svc.Theme.icon
         }
 
         Text {
