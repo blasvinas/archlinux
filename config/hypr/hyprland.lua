@@ -44,7 +44,7 @@ hl.config({
 			},
 		},
 
-		layout = "scrolling",
+		layout = "dwindle",
 	},
 
 	decoration = {
@@ -55,7 +55,7 @@ hl.config({
 		blur = {
 			enabled = true,
 			size = 5,
-			passes = 3,
+			passes = 2,
 		},
 	},
 
@@ -81,10 +81,6 @@ hl.config({
 		disable_hyprland_logo = true,
 	},
 
-	windowrule = {
-		{ "opacity 0.9 0.9", "match:class ^(.*)$" },
-	},
-
 	submaps = {
 		resize = {
 			-- Pass the literal command as a string to dispatcher
@@ -107,7 +103,17 @@ hl.layer_rule({
 	name = "blur-quickshell-bar",
 	match = { namespace = "^quickshell-bar$" },
 	blur = true,
-	ignore_alpha = 0.2, -- don't blur fully/near-transparent pixels
+	ignore_alpha = 0.3, -- blur the pods (alpha 0.5) but not their soft shadows
+})
+
+-- Blur behind Quickshell overlays (launcher, dashboard, toasts, ...).
+-- ignore_alpha = 0.5 keeps the full-screen dim (alpha 0.4) and drop shadows
+-- unblurred, while the glass panels (alpha ~0.8) get frosted.
+hl.layer_rule({
+	name = "blur-quickshell-overlays",
+	match = { namespace = "^quickshell-(launcher|dashboard|notifications|clipboard|powermenu|wallpaper-picker)$" },
+	blur = true,
+	ignore_alpha = 0.5,
 })
 
 -- -----------------------------------------------------------------------------
@@ -116,10 +122,9 @@ hl.layer_rule({
 hl.on("hyprland.start", function()
 	hl.exec_cmd("quickshell")
 	hl.exec_cmd("hypridle")
-	hl.exec_cmd("foot --server")
-	hl.exec_cmd("xrdb -load ~/.Xresources")
-	hl.exec_cmd("wl-paste --watch cliphist store")
-	hl.exec_cmd("apply-gsettings")
+	hl.exec_cmd("systemctl --user start hyprpolkitagent")
+	hl.exec_cmd("wl-paste --type text --watch cliphist store")
+	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 -- -----------------------------------------------------------------------------
@@ -128,19 +133,20 @@ end)
 
 -- Application Launchers & Management
 hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
+hl.bind("SUPER + C", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"))
 hl.bind("SUPER + M", hl.dsp.exec_cmd("thunderbird"))
-hl.bind("SUPER + L", hl.dsp.exec_cmd("quickshell ipc call launcher toggle"))
+hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("quickshell ipc call launcher toggle"))
+hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session")) -- hypridle runs lock_cmd (quickshell lock)
 hl.bind("SUPER + O", hl.dsp.exec_cmd("libreoffice"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("1password"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("SUPER + T", hl.dsp.exec_cmd("ghostty"))
-hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"))
+hl.bind("SUPER + V", hl.dsp.exec_cmd("virt-manager"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("quickshell ipc call wallpaper toggle"))
 hl.bind("SUPER + X", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
 hl.bind("SUPER + SHIFT + F", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("quickshell ipc call theme cycle"))
-hl.bind("SUPER + code:36", hl.dsp.exec_cmd("footclient"))
 hl.bind("SUPER + RETURN", hl.dsp.exec_cmd("ghostty"))
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("quickshell ipc call wallpaper random"))
@@ -161,11 +167,11 @@ hl.bind("SUPER + SHIFT + left", hl.dsp.window.move({ direction = "l" }))
 hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r" }))
 
 -- System Hardware Binds (Brightness, Volume, Media)
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s +5%"))
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 5%-"))
-hl.bind("code:122", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"))
-hl.bind("code:123", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"))
-hl.bind("code:121", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s +5%"), { repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 5%-"), { repeating = true })
+hl.bind("code:122", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { repeating = true })
+hl.bind("code:123", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { repeating = true })
+hl.bind("code:121", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
 hl.bind("code:232", hl.dsp.exec_cmd("brightnessctl -c backlight set 5%-"))
 hl.bind("code:233", hl.dsp.exec_cmd("brightnessctl -c backlight set +5%"))
 hl.bind("code:172", hl.dsp.exec_cmd("playerctl play-pause"))
@@ -173,12 +179,16 @@ hl.bind("code:171", hl.dsp.exec_cmd("playerctl next"))
 hl.bind("code:173", hl.dsp.exec_cmd("playerctl previous"))
 
 -- Screenshots (Using Lua [[ ]] block strings to avoid nested escaping errors)
-hl.bind("Print", hl.dsp.exec_cmd("grim"))
-hl.bind("CTRL + Print", hl.dsp.exec_cmd([[grim -g "$(slurp)"]]))
+-- Print: full screen -> file + clipboard | CTRL: region -> clipboard | SHIFT+CTRL: region -> swappy editor | ALT: active window
+local shot = [[f="$HOME/Pictures/Screenshots/$(date +%F_%H-%M-%S).png"; mkdir -p "$(dirname "$f")"; ]]
+hl.bind("Print", hl.dsp.exec_cmd(shot .. [[grim "$f" && wl-copy < "$f"]]))
+hl.bind("CTRL + Print", hl.dsp.exec_cmd(shot .. [[grim -g "$(slurp)" "$f" && wl-copy < "$f"]]))
+hl.bind("CTRL + SHIFT + Print", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | swappy -f -]]))
 hl.bind(
 	"ALT + Print",
 	hl.dsp.exec_cmd(
-		[[grim -g "$(hyprctl activewindow | grep 'at:' | cut -d':' -f2 | tr -d ' ' | tail -n1) $(hyprctl activewindow | grep 'size:' | cut -d':' -f2 | tr -d ' ' | tail -n1 | sed s/,/x/g)"]]
+		shot
+			.. [[grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" "$f" && wl-copy < "$f"]]
 	)
 )
 

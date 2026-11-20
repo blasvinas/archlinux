@@ -25,7 +25,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         text: root.label
         font.family: Svc.Theme.fontFamily
-        font.pixelSize: 12
+        font.pixelSize: Svc.Theme.fontSm
         font.bold: root.on
         color: root.on ? Svc.Theme.text : Svc.Theme.subtext
     }
@@ -49,7 +49,7 @@ Rectangle {
             radius: height / 2
             y: 2
             x: root.on ? toggle.width - width - 2 : 2
-            color: root.on ? Svc.Theme.onAccent : Svc.Theme.text
+            color: root.on ? Svc.Theme.accentFg : Svc.Theme.text
             Behavior on x { NumberAnimation { duration: 160; easing.type: Easing.OutQuad } }
             Behavior on color { ColorAnimation { duration: 160 } }
         }

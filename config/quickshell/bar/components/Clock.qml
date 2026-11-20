@@ -20,7 +20,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
@@ -33,35 +33,35 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: String.fromCodePoint(0xF00ED) // calendar
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 15
-            color: mouse.containsMouse || panel.visible ? Svc.Theme.text : Svc.Theme.icon
+            font.pixelSize: Svc.Theme.iconSize
+            color: mouse.containsMouse || panel.shown ? Svc.Theme.text : Svc.Theme.icon
             Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
         }
 
-        // Date
+        // Date (secondary)
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Qt.formatDateTime(clock.date, "ddd d MMM")
-            color: Svc.Theme.text
-            font.pixelSize: 14
+            color: Svc.Theme.subtext
+            font.pixelSize: Svc.Theme.fontMd
             font.family: Svc.Theme.fontFamily
         }
 
-        // Clock icon separating date and time
-        Text {
+        // Small dot separator
+        Rectangle {
             anchors.verticalCenter: parent.verticalCenter
-            text: String.fromCodePoint(0xF0150) // clock-outline
-            font.family: Svc.Theme.iconFont
-            font.pixelSize: 14
-            color: Svc.Theme.icon
+            width: 3; height: 3
+            radius: Svc.Theme.radiusPill
+            color: Svc.Theme.muted
         }
 
-        // Time
+        // Time (focal point)
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Qt.formatDateTime(clock.date, "h:mm AP")
             color: Svc.Theme.text
-            font.pixelSize: 14
+            font.pixelSize: Svc.Theme.fontLg
+            font.weight: Font.DemiBold
             font.family: Svc.Theme.fontFamily
         }
     }
@@ -71,7 +71,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: panel.visible = !panel.visible
+        onClicked: panel.shown = !panel.shown
     }
 
     CalendarPanel {

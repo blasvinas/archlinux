@@ -14,30 +14,36 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
         id: row
         anchors.centerIn: parent
-        spacing: 4
+        spacing: 0
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Audio.sinkIcon()
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Audio.sinkMuted ? Svc.Theme.subtext : Svc.Theme.icon
         }
 
-        Text {
+        RevealLabel {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Audio.sinkMuted ? "muted" : Math.round(Svc.Audio.sinkVolume * 100) + "%"
-            color: Svc.Theme.text
-            font.pixelSize: 12
-            font.family: Svc.Theme.fontFamily
+            revealed: mouse.containsMouse || panel.shown || flash.running
         }
+    }
+
+    // Briefly show the level after volume / mute changes (keys, scroll, apps).
+    Timer { id: flash; interval: 1500 }
+    Connections {
+        target: Svc.Audio
+        function onSinkVolumeChanged() { flash.restart(); }
+        function onSinkMutedChanged() { flash.restart(); }
     }
 
     MouseArea {
@@ -50,7 +56,7 @@ Item {
             if (m.button === Qt.MiddleButton)
                 Svc.Audio.toggleSinkMute();
             else
-                panel.visible = !panel.visible;
+                panel.shown = !panel.shown;
         }
         onWheel: (w) => {
             Svc.Audio.stepSink(w.angleDelta.y > 0 ? 0.05 : -0.05);

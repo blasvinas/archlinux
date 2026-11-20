@@ -28,14 +28,14 @@ Card {
             anchors.horizontalCenter: parent.horizontalCenter
             text: String.fromCodePoint(0xF075A) // music-note-off
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 40
+            font.pixelSize: Svc.Theme.fontDisplay
             color: Svc.Theme.muted
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Nothing playing"
             font.family: Svc.Theme.fontFamily
-            font.pixelSize: 13
+            font.pixelSize: Svc.Theme.fontMd
             color: Svc.Theme.subtext
         }
     }
@@ -61,7 +61,7 @@ Card {
                 visible: img.status !== Image.Ready
                 text: String.fromCodePoint(0xF075A)
                 font.family: Svc.Theme.iconFont
-                font.pixelSize: 36
+                font.pixelSize: Svc.Theme.fontHero
                 color: Svc.Theme.muted
             }
 
@@ -104,7 +104,7 @@ Card {
                 width: parent.width
                 text: Svc.Media.title || "Unknown title"
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 15
+                font.pixelSize: Svc.Theme.fontLg
                 font.bold: true
                 color: Svc.Theme.text
                 elide: Text.ElideRight
@@ -113,7 +113,7 @@ Card {
                 width: parent.width
                 text: Svc.Media.artist || "Unknown artist"
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 12
+                font.pixelSize: Svc.Theme.fontSm
                 color: Svc.Theme.subtext
                 elide: Text.ElideRight
             }
@@ -149,14 +149,14 @@ Card {
                     Text {
                         text: Svc.Media.fmtTime(Svc.Media.position)
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Svc.Theme.fontXxs
                         color: Svc.Theme.subtext
                     }
                     Item { width: parent.width - 80; height: 1 }
                     Text {
                         text: Svc.Media.fmtTime(Svc.Media.length)
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Svc.Theme.fontXxs
                         color: Svc.Theme.subtext
                     }
                 }
@@ -192,7 +192,7 @@ Card {
                                 : String.fromCodePoint(modelData.glyph)
                             font.family: Svc.Theme.iconFont
                             font.pixelSize: modelData.big ? 20 : 18
-                            color: modelData.big ? Svc.Theme.onAccent
+                            color: modelData.big ? Svc.Theme.accentFg
                                 : (modelData.enabled ? Svc.Theme.text : Svc.Theme.muted)
                         }
                         MouseArea {

@@ -14,7 +14,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
@@ -27,14 +27,14 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Weather.currentIcon()
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Theme.icon
         }
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Weather.temp + Svc.Weather.unit
             color: Svc.Theme.text
-            font.pixelSize: 13
+            font.pixelSize: Svc.Theme.fontMd
             font.family: Svc.Theme.fontFamily
         }
     }
@@ -44,7 +44,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: panel.visible = !panel.visible
+        onClicked: panel.shown = !panel.shown
     }
 
     WeatherPanel {

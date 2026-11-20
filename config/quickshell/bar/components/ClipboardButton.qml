@@ -18,9 +18,9 @@ Item {
     Text {
         id: icon
         anchors.centerIn: parent
-        text: String.fromCodePoint(0xF0159) // clipboard-text
+        text: String.fromCodePoint(0xF0147) // clipboard-text
         font.family: Svc.Theme.iconFont
-        font.pixelSize: 16
+        font.pixelSize: Svc.Theme.iconSize
         color: mouse.containsMouse ? Svc.Theme.text : Svc.Theme.icon
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }

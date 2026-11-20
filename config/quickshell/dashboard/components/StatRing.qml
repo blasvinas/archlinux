@@ -72,14 +72,14 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: root.glyph
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 16
+                    font.pixelSize: Svc.Theme.fontXl
                     color: root.ringColor
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: root.valueText
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 13
+                    font.pixelSize: Svc.Theme.fontMd
                     font.bold: true
                     color: Svc.Theme.text
                 }
@@ -90,7 +90,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: root.label
             font.family: Svc.Theme.fontFamily
-            font.pixelSize: 11
+            font.pixelSize: Svc.Theme.fontXs
             color: Svc.Theme.subtext
         }
     }

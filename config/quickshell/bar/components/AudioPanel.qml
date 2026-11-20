@@ -19,17 +19,20 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 340
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     onVisibleChanged: if (!visible) { showSinks = false; showSources = false; }
@@ -40,8 +43,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -57,7 +60,7 @@ PopupWindow {
                 font.family: Svc.Theme.fontFamily
                 text: "Output"
                 color: Svc.Theme.subtext
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 font.bold: true
             }
 
@@ -71,7 +74,7 @@ PopupWindow {
                     width: 24
                     text: Svc.Audio.sinkIcon()
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 20
+                    font.pixelSize: Svc.Theme.font3xl
                     color: Svc.Audio.sinkMuted ? Svc.Theme.subtext : Svc.Theme.text
                     MouseArea {
                         anchors.fill: parent
@@ -94,7 +97,7 @@ PopupWindow {
                     horizontalAlignment: Text.AlignRight
                     text: Math.round(Svc.Audio.sinkVolume * 100) + "%"
                     color: Svc.Theme.text
-                    font.pixelSize: 12
+                    font.pixelSize: Svc.Theme.fontSm
                     font.family: Svc.Theme.fontFamily
                 }
 
@@ -104,7 +107,7 @@ PopupWindow {
                     width: 16
                     text: String.fromCodePoint(pop.showSinks ? 0xF0143 : 0xF0140) // chevron
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 16
+                    font.pixelSize: Svc.Theme.fontXl
                     color: Svc.Theme.subtext
                     MouseArea {
                         anchors.fill: parent
@@ -137,7 +140,7 @@ PopupWindow {
                             elide: Text.ElideRight
                             text: (active ? "● " : "○ ") + (modelData.description || modelData.name)
                             color: active ? Svc.Theme.accent : Svc.Theme.text
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                         }
                         MouseArea {
                             id: dmouse
@@ -157,7 +160,7 @@ PopupWindow {
                 font.family: Svc.Theme.fontFamily
                 text: "Input"
                 color: Svc.Theme.subtext
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 font.bold: true
             }
 
@@ -170,7 +173,7 @@ PopupWindow {
                     width: 24
                     text: Svc.Audio.sourceIcon()
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 20
+                    font.pixelSize: Svc.Theme.font3xl
                     color: Svc.Audio.sourceMuted ? Svc.Theme.subtext : Svc.Theme.text
                     MouseArea {
                         anchors.fill: parent
@@ -193,7 +196,7 @@ PopupWindow {
                     horizontalAlignment: Text.AlignRight
                     text: Math.round(Svc.Audio.sourceVolume * 100) + "%"
                     color: Svc.Theme.text
-                    font.pixelSize: 12
+                    font.pixelSize: Svc.Theme.fontSm
                     font.family: Svc.Theme.fontFamily
                 }
 
@@ -202,7 +205,7 @@ PopupWindow {
                     width: 16
                     text: String.fromCodePoint(pop.showSources ? 0xF0143 : 0xF0140)
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 16
+                    font.pixelSize: Svc.Theme.fontXl
                     color: Svc.Theme.subtext
                     MouseArea {
                         anchors.fill: parent
@@ -234,7 +237,7 @@ PopupWindow {
                             elide: Text.ElideRight
                             text: (active ? "● " : "○ ") + (modelData.description || modelData.name)
                             color: active ? Svc.Theme.accent : Svc.Theme.text
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                         }
                         MouseArea {
                             id: smouse

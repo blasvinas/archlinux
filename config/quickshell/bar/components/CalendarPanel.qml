@@ -20,11 +20,14 @@ PopupWindow {
         var maxX = barWindow.width - width - 6;
         return Math.max(6, Math.min(x, maxX));
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 300
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     // Jump back to the current month each time it opens.
@@ -32,8 +35,8 @@ PopupWindow {
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     Rectangle {
@@ -42,8 +45,8 @@ PopupWindow {
         implicitHeight: cal.implicitHeight + 24
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1

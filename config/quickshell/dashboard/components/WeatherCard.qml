@@ -19,7 +19,7 @@ Card {
                 anchors.verticalCenter: parent.verticalCenter
                 text: Svc.Weather.currentIcon()
                 font.family: Svc.Theme.iconFont
-                font.pixelSize: 44
+                font.pixelSize: Svc.Theme.fontDisplay
                 color: Svc.Theme.icon
             }
             Column {
@@ -28,14 +28,14 @@ Card {
                 Text {
                     text: Svc.Weather.ready ? (Svc.Weather.temp + Svc.Weather.unit) : "--"
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 22
+                    font.pixelSize: Svc.Theme.font3xl
                     font.bold: true
                     color: Svc.Theme.text
                 }
                 Text {
                     text: Svc.Weather.description
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Svc.Theme.fontXs
                     color: Svc.Theme.subtext
                     elide: Text.ElideRight
                     width: 150
@@ -43,7 +43,7 @@ Card {
                 Text {
                     text: Svc.Weather.location
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 10
+                    font.pixelSize: Svc.Theme.fontXxs
                     color: Svc.Theme.muted
                     elide: Text.ElideRight
                     width: 150
@@ -67,14 +67,14 @@ Card {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: modelData.day
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 11
+                        font.pixelSize: Svc.Theme.fontXs
                         color: Svc.Theme.subtext
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: Svc.Weather.iconFor(modelData.code, true)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 22
+                        font.pixelSize: Svc.Theme.font3xl
                         color: Svc.Theme.icon
                     }
                     Text {
@@ -82,7 +82,7 @@ Card {
                         text: (Svc.Weather.useFahrenheit ? modelData.maxF : modelData.maxC) + "° / "
                             + (Svc.Weather.useFahrenheit ? modelData.minF : modelData.minC) + "°"
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Svc.Theme.fontXxs
                         color: Svc.Theme.text
                     }
                 }

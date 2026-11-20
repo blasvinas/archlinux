@@ -45,6 +45,20 @@ Singleton {
     readonly property string monoFont:   "monospace"
     readonly property string iconFont: "MesloLGS Nerd Font"
 
+    // Type scale. Prefer these over raw pixel sizes for a consistent rhythm.
+    readonly property int fontXxs:     10  // tiny tags, axis labels
+    readonly property int fontXs:      11  // captions, section headers
+    readonly property int fontSm:      12  // secondary labels
+    readonly property int fontMd:      13  // bar labels, body text
+    readonly property int fontLg:      14  // emphasis (clock time, row titles)
+    readonly property int fontXl:      16  // small headings, list icons
+    readonly property int font2xl:     18  // panel titles, row icons
+    readonly property int font3xl:     20  // large icons, sub-headlines
+    readonly property int fontHero:    32  // big numbers (battery %, media icon)
+    readonly property int fontDisplay: 44  // headline numbers (temperature, avatar initial)
+    readonly property int fontJumbo:   120 // lock-screen clock
+    readonly property int iconSize:    16  // bar glyph icons
+
     // ---- Palettes ------------------------------------------------------------
     // Each palette provides the raw ramp; roles/surfaces below are derived.
     readonly property string scriptPath:
@@ -126,10 +140,19 @@ Singleton {
     readonly property color danger:   p.red
     readonly property color success:  p.green
     readonly property color warning:  p.yellow
-    readonly property color onAccent: p.onAccent
+    // Foreground on accent fills. (Not named `onAccent`: QML treats `on<Upper>`
+    // names as signal handlers, so such a property silently stays black.)
+    readonly property color accentFg: p.onAccent
 
     // ---- Surfaces & overlays (derived) --------------------------------------
     readonly property color barBg:   _a(p.base, "80")
+    // Slightly lifted top stop for the pods' vertical "glass" gradient.
+    readonly property color barBgTop: Qt.tint(barBg, p.dark ? "#12ffffff" : "#1affffff")
+    // Hairline edge around the bar pods.
+    readonly property color podBorder: p.dark ? "#1affffff" : "#1a000000"
+    // Translucent surface for layer-shell overlays (launcher, dashboard,
+    // toasts, ...) which Hyprland blurs behind.
+    readonly property color glassBg: _a(p.mantle, "d0")
     readonly property color popupBg: _a(p.mantle, "ee")
     readonly property color toastBg: _a(p.mantle, "f2")
     readonly property color menuBg:  _a(p.surface0, "f2")
@@ -155,15 +178,19 @@ Singleton {
     // ---- Floating layout -----------------------------------------------------
     // Outer gap between the bar and the screen edges, and the gap between the
     // separate bar "pods" (left / center / right islands).
-    readonly property int barMargin: 8   // space around the floating bar
+    // Matched to Hyprland's gaps_out / rounding so the bar lines up with windows.
+    readonly property int barMargin: 10  // space around the floating bar
+    readonly property int podRadius: 10  // corner radius of bar pods
+    // Y (in bar-window coords) where dropdown panels start: 8px below the pods.
+    readonly property int popupTop: barMargin + barHeight + 8
     readonly property int barGap:    8   // space between pods
     readonly property int podPadding: 6  // inner horizontal padding of a pod
 
     // ---- Shadows -------------------------------------------------------------
     // Soft drop-shadow tokens shared by the bar, popups, toasts and launcher.
-    readonly property color shadowColor: "#80000000"
-    readonly property real  shadowBlur:  1.0  // MultiEffect blur amount (0..1+)
-    readonly property real  shadowY:     2    // vertical offset
+    readonly property color shadowColor: "#70000000"
+    readonly property real  shadowBlur:  0.8  // MultiEffect blur amount (0..1+)
+    readonly property real  shadowY:     3    // vertical offset
     readonly property real  shadowScale: 1.0
 
     // ---- Wallpaper color extraction -----------------------------------------

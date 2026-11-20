@@ -17,19 +17,22 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 360
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     onVisibleChanged: if (visible) Svc.Weather.refresh()
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     Rectangle {
@@ -38,8 +41,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -64,7 +67,7 @@ PopupWindow {
                     width: parent.width - 60
                     text: Svc.Weather.location || "Weather"
                     color: Svc.Theme.text
-                    font.pixelSize: 14
+                    font.pixelSize: Svc.Theme.fontLg
                     font.bold: true
                     elide: Text.ElideRight
                 }
@@ -78,7 +81,7 @@ PopupWindow {
                         font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.useFahrenheit ? "°F" : "°C"
                         color: Svc.Theme.accent
-                        font.pixelSize: 13
+                        font.pixelSize: Svc.Theme.fontMd
                         font.bold: true
                         MouseArea {
                             anchors.fill: parent
@@ -90,7 +93,7 @@ PopupWindow {
                     Text {
                         text: String.fromCodePoint(0xF0450) // refresh
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 15
+                        font.pixelSize: Svc.Theme.fontLg
                         color: Svc.Weather.loading ? Svc.Theme.accent : Svc.Theme.subtext
                         MouseArea {
                             anchors.fill: parent
@@ -116,7 +119,7 @@ PopupWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: Svc.Weather.currentIcon()
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 46
+                    font.pixelSize: Svc.Theme.fontDisplay
                     color: Svc.Theme.accent
                 }
                 Column {
@@ -125,20 +128,20 @@ PopupWindow {
                         font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.temp + Svc.Weather.unit
                         color: Svc.Theme.text
-                        font.pixelSize: 30
+                        font.pixelSize: Svc.Theme.fontHero
                         font.bold: true
                     }
                     Text {
                         font.family: Svc.Theme.fontFamily
                         text: Svc.Weather.description
                         color: Svc.Theme.subtext
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                     }
                     Text {
                         font.family: Svc.Theme.fontFamily
                         text: "Feels like " + Svc.Weather.feels + Svc.Weather.unit
                         color: Svc.Theme.subtext
-                        font.pixelSize: 11
+                        font.pixelSize: Svc.Theme.fontXs
                     }
                 }
             }
@@ -166,7 +169,7 @@ PopupWindow {
                         Text {
                             text: String.fromCodePoint(modelData.g)
                             font.family: Svc.Theme.iconFont
-                            font.pixelSize: 15
+                            font.pixelSize: Svc.Theme.fontLg
                             color: Svc.Theme.subtext
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -174,7 +177,7 @@ PopupWindow {
                             font.family: Svc.Theme.fontFamily
                             text: modelData.label
                             color: Svc.Theme.text
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }
@@ -204,7 +207,7 @@ PopupWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: modelData.hour
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 11
+                        font.pixelSize: Svc.Theme.fontXs
                         font.bold: modelData.hour === "Now"
                         color: modelData.hour === "Now" ? Svc.Theme.accent : Svc.Theme.subtext
                     }
@@ -212,14 +215,14 @@ PopupWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: Svc.Weather.iconFor(modelData.code, modelData.isDay)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 20
+                        font.pixelSize: Svc.Theme.font3xl
                         color: Svc.Theme.text
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: (Svc.Weather.useFahrenheit ? modelData.tempF : modelData.tempC) + "°"
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                         font.bold: true
                         color: Svc.Theme.text
                     }
@@ -230,14 +233,14 @@ PopupWindow {
                         Text {
                             text: String.fromCodePoint(0xF0597)
                             font.family: Svc.Theme.iconFont
-                            font.pixelSize: 9
+                            font.pixelSize: Svc.Theme.fontXxs
                             color: Svc.Theme.accent
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         Text {
                             text: modelData.pop + "%"
                             font.family: Svc.Theme.fontFamily
-                            font.pixelSize: 9
+                            font.pixelSize: Svc.Theme.fontXxs
                             color: Svc.Theme.accent
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -265,7 +268,7 @@ PopupWindow {
                             width: 46
                             text: modelData.day
                             font.family: Svc.Theme.fontFamily
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                             font.bold: modelData.day === "Today"
                             color: modelData.day === "Today" ? Svc.Theme.text : Svc.Theme.subtext
                         }
@@ -275,7 +278,7 @@ PopupWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             text: Svc.Weather.iconFor(modelData.code, true)
                             font.family: Svc.Theme.iconFont
-                            font.pixelSize: 17
+                            font.pixelSize: Svc.Theme.fontXl
                             color: Svc.Theme.icon
                         }
                         Text {
@@ -286,7 +289,7 @@ PopupWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             text: modelData.desc
                             font.family: Svc.Theme.fontFamily
-                            font.pixelSize: 11
+                            font.pixelSize: Svc.Theme.fontXs
                             color: Svc.Theme.subtext
                             elide: Text.ElideRight
                         }
@@ -298,14 +301,14 @@ PopupWindow {
                             Text {
                                 text: (Svc.Weather.useFahrenheit ? modelData.maxF : modelData.maxC) + "°"
                                 font.family: Svc.Theme.fontFamily
-                                font.pixelSize: 12
+                                font.pixelSize: Svc.Theme.fontSm
                                 font.bold: true
                                 color: Svc.Theme.text
                             }
                             Text {
                                 text: (Svc.Weather.useFahrenheit ? modelData.minF : modelData.minC) + "°"
                                 font.family: Svc.Theme.fontFamily
-                                font.pixelSize: 12
+                                font.pixelSize: Svc.Theme.fontSm
                                 color: Svc.Theme.muted
                             }
                         }

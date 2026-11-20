@@ -17,7 +17,7 @@ Rectangle {
         visible: root.title.length > 0
         text: root.title
         font.family: Svc.Theme.fontFamily
-        font.pixelSize: 12
+        font.pixelSize: Svc.Theme.fontSm
         font.bold: true
         color: Svc.Theme.subtext
         anchors.top: parent.top

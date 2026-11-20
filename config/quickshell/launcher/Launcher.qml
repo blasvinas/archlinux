@@ -144,7 +144,7 @@ PanelWindow {
         anchors.top: parent.top
         anchors.topMargin: Math.round(parent.height * 0.12)
         radius: Svc.Theme.radiusXl
-        color: Svc.Theme.toastBg
+        color: Svc.Theme.glassBg
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -181,7 +181,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: String.fromCodePoint(0xF0349) // magnify
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: Svc.Theme.subtext
                     }
 
@@ -190,7 +190,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width - 34
                         color: Svc.Theme.text
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         clip: true
                         focus: true
                         onTextChanged: root.query = text
@@ -214,7 +214,7 @@ PanelWindow {
                             verticalAlignment: Text.AlignVCenter
                             text: "Search applications…"
                             color: Svc.Theme.subtext
-                            font.pixelSize: 16
+                            font.pixelSize: Svc.Theme.fontXl
                             visible: input.text.length === 0
                         }
                     }
@@ -273,7 +273,7 @@ PanelWindow {
                                     anchors.centerIn: parent
                                     text: (modelData.name || "?").slice(0, 1).toUpperCase()
                                     color: Svc.Theme.text
-                                    font.pixelSize: 16
+                                    font.pixelSize: Svc.Theme.fontXl
                                     font.bold: true
                                 }
                             }
@@ -286,7 +286,7 @@ PanelWindow {
                                 font.family: Svc.Theme.fontFamily
                                 text: modelData.name
                                 color: Svc.Theme.text
-                                font.pixelSize: 14
+                                font.pixelSize: Svc.Theme.fontLg
                                 font.bold: true
                                 elide: Text.ElideRight
                                 width: parent.width
@@ -295,7 +295,7 @@ PanelWindow {
                                 font.family: Svc.Theme.fontFamily
                                 text: modelData.comment || modelData.genericName || ""
                                 color: Svc.Theme.subtext
-                                font.pixelSize: 11
+                                font.pixelSize: Svc.Theme.fontXs
                                 elide: Text.ElideRight
                                 width: parent.width
                                 visible: text.length > 0
@@ -315,7 +315,7 @@ PanelWindow {
                         visible: hasActions
                         text: String.fromCodePoint(0xF01D9) // dots-horizontal
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: Svc.Theme.subtext
                         MouseArea {
                             anchors.fill: parent
@@ -352,7 +352,7 @@ PanelWindow {
                     visible: root.results.length === 0
                     text: "No results"
                     color: Svc.Theme.subtext
-                    font.pixelSize: 14
+                    font.pixelSize: Svc.Theme.fontLg
                 }
             }
         }
@@ -396,7 +396,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "Open"
                         color: Svc.Theme.text
-                        font.pixelSize: 13
+                        font.pixelSize: Svc.Theme.fontMd
                         font.bold: true
                     }
                     HoverHandler { id: openHover }
@@ -430,7 +430,7 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             text: modelData.name
                             color: Svc.Theme.text
-                            font.pixelSize: 13
+                            font.pixelSize: Svc.Theme.fontMd
                             elide: Text.ElideRight
                         }
                         HoverHandler { id: actHover }

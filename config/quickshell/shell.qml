@@ -70,6 +70,9 @@ ShellRoot {
         function cycle(): void { Svc.Theme.cycle(); }
         function current(): string { return Svc.Theme.variant; }
         function list(): string { return Svc.Theme.names.join(", "); }
+        // Re-run wallpaper color extraction (e.g. after editing the script):
+        //   quickshell ipc call theme regenerate
+        function regenerate(): void { Svc.Theme.generateFromWallpaper(Svc.Wallpaper.current); }
     }
 
     // Wallpaper control:

@@ -51,6 +51,16 @@ def clampv(c, lo, hi):  # clamp a color's value/brightness into [lo,hi]
     h, s, v = rgb_hsv(c)
     return hsv_rgb(h, s, max(lo, min(hi, v)))
 
+def rel_lum(c):  # WCAG relative luminance 0..1
+    def ch(v):
+        v /= 255
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+    return 0.2126 * ch(c[0]) + 0.7152 * ch(c[1]) + 0.0722 * ch(c[2])
+
+def pick_on(c):  # whichever of near-black / white contrasts more with c
+    L = rel_lum(c)
+    return "#111111" if (L + 0.05) / 0.0555 >= 1.05 / (L + 0.05) else "#ffffff"
+
 # ---------------------------------------------------------------- k-means
 def kmeans(px, k=8, iters=12):
     pts = random.sample(px, min(len(px), 2000))
@@ -104,7 +114,6 @@ def build(path):
         surface2 = hsv_rgb(dh, min(ds, 0.26), 0.40)
         text    = hsv_rgb(dh, 0.08, 0.93)
         subtext = hsv_rgb(dh, 0.12, 0.72)
-        on_accent = "#111111"
     else:
         base    = hsv_rgb(dh, min(ds, 0.18), 0.95)
         mantle  = hsv_rgb(dh, min(ds, 0.18), 0.90)
@@ -114,15 +123,19 @@ def build(path):
         surface2 = hsv_rgb(dh, min(ds, 0.24), 0.66)
         text    = hsv_rgb(dh, 0.30, 0.25)
         subtext = hsv_rgb(dh, 0.25, 0.40)
-        on_accent = "#ffffff"
 
-    # Semantic colors: fixed target hues, saturation/brightness tuned to theme.
-    sv = (0.65, 0.85) if dark else (0.70, 0.70)
-    def sem(hue):
-        return hsv_rgb(hue / 360.0, sv[0], sv[1])
+    # Semantic colors: fixed target hues nudged slightly toward the accent hue
+    # (at most ~10 degrees) so they harmonize with the wallpaper while staying
+    # clearly red / green / yellow. Saturation/brightness tuned to theme.
+    sv = (0.60, 0.85) if dark else (0.70, 0.70)
+    def sem(hue, pull=0.12, cap=10 / 360.0):
+        h = hue / 360.0
+        d = ((ah - h + 0.5) % 1.0) - 0.5          # shortest signed hue distance
+        shift = max(-cap, min(cap, d * pull))
+        return hsv_rgb((h + shift) % 1.0, sv[0], sv[1])
     red    = sem(0)
     green  = sem(140)
-    yellow = sem(45)
+    yellow = sem(50)
 
     return {
         "dark": dark,
@@ -131,7 +144,7 @@ def build(path):
         "text": hexs(text), "subtext": hexs(subtext),
         "blue": hexs(accent),
         "red": hexs(red), "green": hexs(green), "yellow": hexs(yellow),
-        "onAccent": on_accent,
+        "onAccent": pick_on(accent),
     }
 
 if __name__ == "__main__":

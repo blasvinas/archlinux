@@ -33,7 +33,7 @@ Card {
                 elide: Text.ElideRight
                 text: root.greeting() + (Svc.SysInfo.user ? ", " + Svc.SysInfo.user : "")
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 18
+                font.pixelSize: Svc.Theme.font2xl
                 font.bold: true
                 color: Svc.Theme.text
             }
@@ -42,7 +42,7 @@ Card {
                 elide: Text.ElideRight
                 text: Qt.formatDateTime(clock.date, "dddd, d MMMM")
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 12
+                font.pixelSize: Svc.Theme.fontSm
                 color: Svc.Theme.subtext
             }
         }
@@ -96,7 +96,7 @@ Card {
                         anchors.centerIn: parent
                         text: String.fromCodePoint(modelData.glyph)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: modelData.action === "power" && ma.containsMouse
                             ? Svc.Theme.danger : Svc.Theme.icon
                     }

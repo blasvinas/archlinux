@@ -21,20 +21,20 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
         id: row
         anchors.centerIn: parent
-        spacing: 4
+        spacing: 0
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Battery.batteryIcon()
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: root.levelColor()
 
             // Gentle blink when critically low and not charging.
@@ -46,12 +46,10 @@ Item {
             }
         }
 
-        Text {
+        RevealLabel {
             anchors.verticalCenter: parent.verticalCenter
             text: Math.round(Svc.Battery.percent * 100) + "%"
-            color: Svc.Theme.text
-            font.pixelSize: 12
-            font.family: Svc.Theme.fontFamily
+            revealed: Svc.Battery.onBattery || mouse.containsMouse || panel.shown
         }
     }
 
@@ -60,7 +58,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: panel.visible = !panel.visible
+        onClicked: panel.shown = !panel.shown
     }
 
     BatteryPanel {

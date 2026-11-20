@@ -104,7 +104,7 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
             text: String.fromCodePoint(0xF0141) // chevron-left
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 18
+            font.pixelSize: Svc.Theme.font2xl
             color: prevHover.hovered ? Svc.Theme.accent : Svc.Theme.subtext
             HoverHandler { id: prevHover }
             MouseArea {
@@ -121,7 +121,7 @@ Column {
             anchors.centerIn: parent
             text: root.monthNames[root.viewMonth] + " " + root.viewYear
             color: titleHover.hovered ? Svc.Theme.accent : Svc.Theme.text
-            font.pixelSize: 14
+            font.pixelSize: Svc.Theme.fontLg
             font.bold: true
             HoverHandler { id: titleHover }
             MouseArea {
@@ -137,7 +137,7 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
             text: String.fromCodePoint(0xF0142) // chevron-right
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 18
+            font.pixelSize: Svc.Theme.font2xl
             color: nextHover.hovered ? Svc.Theme.accent : Svc.Theme.subtext
             HoverHandler { id: nextHover }
             MouseArea {
@@ -168,7 +168,7 @@ Column {
                     anchors.centerIn: parent
                     text: modelData
                     color: (index === 0 || index === 6) ? Svc.Theme.accent : Svc.Theme.subtext
-                    font.pixelSize: 11
+                    font.pixelSize: Svc.Theme.fontXs
                     font.bold: true
                 }
             }
@@ -191,7 +191,7 @@ Column {
                     anchors.centerIn: parent
                     text: modelData.weekNo
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 9
+                    font.pixelSize: Svc.Theme.fontXxs
                     color: Svc.Theme.muted
                 }
             }
@@ -221,7 +221,7 @@ Column {
                             font.family: Svc.Theme.fontFamily
                             anchors.centerIn: parent
                             text: modelData.day
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                             font.bold: isToday || isSelected
                             color: isToday ? Svc.Theme.crust
                                  : !modelData.inMonth ? Svc.Theme.muted
@@ -264,7 +264,7 @@ Column {
                 + root.fullDayNames[d.getDay()] + ", "
                 + d.getDate() + " " + root.monthNames[d.getMonth()] + " " + d.getFullYear()
             font.family: Svc.Theme.fontFamily
-            font.pixelSize: 11
+            font.pixelSize: Svc.Theme.fontXs
             color: Svc.Theme.subtext
         }
 
@@ -284,7 +284,7 @@ Column {
                 anchors.centerIn: parent
                 text: "Today"
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 10
+                font.pixelSize: Svc.Theme.fontXxs
                 font.bold: true
                 color: todayPillHover.hovered ? Svc.Theme.crust : Svc.Theme.accent
             }

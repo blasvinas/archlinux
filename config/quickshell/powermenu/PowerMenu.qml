@@ -99,7 +99,7 @@ PanelWindow {
         width: grid.width + 48
         height: title.height + grid.height + 48
         radius: Svc.Theme.radiusXl
-        color: Svc.Theme.toastBg
+        color: Svc.Theme.glassBg
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -121,7 +121,7 @@ PanelWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Session"
                 color: Svc.Theme.subtext
-                font.pixelSize: 13
+                font.pixelSize: Svc.Theme.fontMd
                 font.bold: true
             }
 
@@ -161,16 +161,16 @@ PanelWindow {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: String.fromCodePoint(confirming ? 0xF012C : modelData.glyph)
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 30
-                                color: invert ? Svc.Theme.onAccent : Svc.Theme.text
+                                font.pixelSize: Svc.Theme.fontHero
+                                color: invert ? Svc.Theme.accentFg : Svc.Theme.text
                             }
                             Text {
                                 font.family: Svc.Theme.fontFamily
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: confirming ? "Confirm?" : modelData.label
-                                font.pixelSize: 12
+                                font.pixelSize: Svc.Theme.fontSm
                                 font.bold: confirming
-                                color: invert ? Svc.Theme.onAccent : Svc.Theme.subtext
+                                color: invert ? Svc.Theme.accentFg : Svc.Theme.subtext
                             }
                         }
 

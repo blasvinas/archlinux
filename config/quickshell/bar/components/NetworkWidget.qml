@@ -14,7 +14,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
@@ -27,7 +27,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Network.signalIcon(Svc.Network.activeSignal, Svc.Network.activeSecure)
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Theme.icon
         }
 
@@ -35,7 +35,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Network.connected ? Svc.Network.activeSsid : "Off"
             color: Svc.Theme.text
-            font.pixelSize: 13
+            font.pixelSize: Svc.Theme.fontMd
             font.family: Svc.Theme.fontFamily
         }
     }
@@ -46,8 +46,8 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: {
-            panel.visible = !panel.visible;
-            if (panel.visible)
+            panel.shown = !panel.shown;
+            if (panel.shown)
                 Svc.Network.refresh(true);
         }
     }

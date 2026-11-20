@@ -24,17 +24,20 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 300
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     Rectangle {
@@ -43,8 +46,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -59,7 +62,7 @@ PopupWindow {
                 font.family: Svc.Theme.fontFamily
                 text: "Battery"
                 color: Svc.Theme.subtext
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 font.bold: true
             }
 
@@ -72,7 +75,7 @@ PopupWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: Svc.Battery.batteryIcon()
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 34
+                    font.pixelSize: Svc.Theme.fontHero
                     color: pop.levelColor(Svc.Battery.percent, Svc.Battery.charging)
                 }
 
@@ -84,7 +87,7 @@ PopupWindow {
                         font.family: Svc.Theme.fontFamily
                         text: Math.round(Svc.Battery.percent * 100) + "%"
                         color: Svc.Theme.text
-                        font.pixelSize: 22
+                        font.pixelSize: Svc.Theme.font3xl
                         font.bold: true
                     }
                     Row {
@@ -94,7 +97,7 @@ PopupWindow {
                                   + Svc.Battery.stateText()
                             font.family: Svc.Theme.iconFont
                             color: Svc.Theme.subtext
-                            font.pixelSize: 12
+                            font.pixelSize: Svc.Theme.fontSm
                         }
                     }
                     Text {
@@ -104,7 +107,7 @@ PopupWindow {
                               + Svc.Battery.formatTime(Svc.Battery.secondsRemaining)
                               + (Svc.Battery.charging ? "" : " remaining")
                         color: Svc.Theme.subtext
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                     }
                 }
             }
@@ -117,14 +120,14 @@ PopupWindow {
                 Text {
                     text: String.fromCodePoint(0xF02D1) // heart-pulse
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 14
+                    font.pixelSize: Svc.Theme.fontLg
                     color: Svc.Theme.subtext
                 }
                 Text {
                     font.family: Svc.Theme.fontFamily
                     text: "Health: " + Math.round(Svc.Battery.healthPercent) + "%"
                     color: Svc.Theme.subtext
-                    font.pixelSize: 12
+                    font.pixelSize: Svc.Theme.fontSm
                 }
             }
 
@@ -141,7 +144,7 @@ PopupWindow {
                 visible: Svc.Battery.peripherals.length > 0
                 text: "Devices"
                 color: Svc.Theme.subtext
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 font.bold: true
             }
 
@@ -156,7 +159,7 @@ PopupWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: Svc.Battery.iconFor(modelData.percentage, false)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: pop.levelColor(modelData.percentage, false)
                     }
                     Text {
@@ -166,13 +169,13 @@ PopupWindow {
                         elide: Text.ElideRight
                         text: modelData.model || "Device"
                         color: Svc.Theme.text
-                        font.pixelSize: 13
+                        font.pixelSize: Svc.Theme.fontMd
                     }
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: Math.round(modelData.percentage * 100) + "%"
                         color: Svc.Theme.subtext
-                        font.pixelSize: 13
+                        font.pixelSize: Svc.Theme.fontMd
                         font.family: Svc.Theme.fontFamily
                     }
                 }

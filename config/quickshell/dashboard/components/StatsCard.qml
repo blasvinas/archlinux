@@ -74,14 +74,14 @@ Card {
                         + Svc.SysInfo.fmtBytes(Svc.SysInfo.memUsed) + " / "
                         + Svc.SysInfo.fmtBytes(Svc.SysInfo.memTotal)
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Svc.Theme.fontXs
                     color: Svc.Theme.subtext
                 }
                 Item { width: parent.width - 320; height: 1 }
                 Text {
                     text: String.fromCodePoint(0xF0510) + "  up " + Svc.SysInfo.fmtUptime(Svc.SysInfo.uptime)
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Svc.Theme.fontXs
                     color: Svc.Theme.subtext
                 }
             }
@@ -89,7 +89,7 @@ Card {
             Text {
                 text: "load  " + Svc.SysInfo.load[0] + "  " + Svc.SysInfo.load[1] + "  " + Svc.SysInfo.load[2]
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 color: Svc.Theme.subtext
             }
         }

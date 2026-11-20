@@ -20,7 +20,7 @@ Item {
         anchors.centerIn: parent
         text: String.fromCodePoint(0xF003B) // apps grid
         font.family: Svc.Theme.iconFont
-        font.pixelSize: 18
+        font.pixelSize: Svc.Theme.iconSize
         color: mouse.containsMouse ? Svc.Theme.text : Svc.Theme.icon
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }

@@ -1,5 +1,6 @@
 import Quickshell.Hyprland
 import QtQuick
+import QtQuick.Effects
 import "../../services" as Svc
 
 // Per-monitor Hyprland workspace indicator. Click to switch, scroll to cycle.
@@ -38,20 +39,32 @@ Row {
             readonly property bool occupied:
                 modelData.toplevels && modelData.toplevels.values.length > 0
 
+            // Empty, unfocused workspaces collapse to a small dot.
+            readonly property bool isDot: !focused && !active && !occupied
+
             anchors.verticalCenter: parent.verticalCenter
-            height: 20
-            width: focused ? 30 : 20
+            height: isDot ? 8 : 20
+            width: focused ? 32 : isDot ? 8 : 20
             radius: Svc.Theme.radiusPill
 
-            // Focused workspace gets a subtle two-stop accent gradient; other
-            // states fall back to a flat fill via `color`.
+            // Focused workspace gets a two-stop accent gradient plus a soft
+            // accent glow; other states use a flat fill via `color`.
             gradient: focused ? focusGrad : null
             color: focused ? "transparent"
                  : active ? Svc.Theme.muted
                  : occupied ? Svc.Theme.hi
-                 : "transparent"
-            border.color: (focused || active || occupied) ? "transparent" : Svc.Theme.border
-            border.width: 1
+                 : Svc.Theme.muted
+
+            layer.enabled: focused
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                shadowColor: Svc.Theme.accent
+                shadowOpacity: 0.55
+                shadowBlur: 0.6
+                blurMax: 16
+                shadowVerticalOffset: 0
+                autoPaddingEnabled: true
+            }
 
             Gradient {
                 id: focusGrad
@@ -60,20 +73,24 @@ Row {
                 GradientStop { position: 1.0; color: Svc.Theme.accentAlt }
             }
 
-            Behavior on width { NumberAnimation { duration: 130; easing.type: Easing.OutCubic } }
+            Behavior on width { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+            Behavior on height { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
             Behavior on color { ColorAnimation { duration: 130 } }
 
             Text {
                 anchors.centerIn: parent
                 text: modelData.name
-                color: pill.focused ? Svc.Theme.crust : Svc.Theme.text
-                font.pixelSize: 12
+                visible: !pill.isDot
+                color: pill.focused ? Svc.Theme.accentFg : Svc.Theme.text
+                font.pixelSize: Svc.Theme.fontSm
                 font.family: Svc.Theme.fontFamily
                 font.bold: pill.focused
             }
 
             MouseArea {
                 anchors.fill: parent
+                // Keep tiny dots comfortably clickable.
+                anchors.margins: pill.isDot ? -6 : 0
                 cursorShape: Qt.PointingHandCursor
                 onClicked: modelData.activate()
             }

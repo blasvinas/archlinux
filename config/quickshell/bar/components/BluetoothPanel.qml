@@ -18,17 +18,20 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 340
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     onVisibleChanged: if (!visible) selectedAddr = ""
@@ -39,8 +42,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -61,7 +64,7 @@ PopupWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Bluetooth"
                     color: Svc.Theme.text
-                    font.pixelSize: 15
+                    font.pixelSize: Svc.Theme.fontLg
                     font.bold: true
                 }
 
@@ -74,7 +77,7 @@ PopupWindow {
                     Text {
                         text: String.fromCodePoint(0xF0450)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         color: Svc.Bt.discovering ? Svc.Theme.accent : Svc.Theme.subtext
                         visible: Svc.Bt.enabled
                         MouseArea {
@@ -116,14 +119,14 @@ PopupWindow {
                 visible: !Svc.Bt.available
                 text: "No Bluetooth adapter"
                 color: Svc.Theme.subtext
-                font.pixelSize: 13
+                font.pixelSize: Svc.Theme.fontMd
             }
             Text {
                 font.family: Svc.Theme.fontFamily
                 visible: Svc.Bt.available && !Svc.Bt.enabled
                 text: "Bluetooth is turned off"
                 color: Svc.Theme.subtext
-                font.pixelSize: 13
+                font.pixelSize: Svc.Theme.fontMd
             }
 
             // ---- Device list ---------------------------------------------
@@ -160,7 +163,7 @@ PopupWindow {
                             Text {
                                 text: Svc.Bt.deviceIcon(modelData.icon)
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 18
+                                font.pixelSize: Svc.Theme.font2xl
                                 color: modelData.connected ? Svc.Theme.accent : Svc.Theme.text
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -172,7 +175,7 @@ PopupWindow {
                                     font.family: Svc.Theme.fontFamily
                                     text: modelData.name || modelData.address
                                     color: modelData.connected ? Svc.Theme.accent : Svc.Theme.text
-                                    font.pixelSize: 13
+                                    font.pixelSize: Svc.Theme.fontMd
                                     font.bold: modelData.connected
                                     elide: Text.ElideRight
                                     width: parent.width
@@ -185,7 +188,7 @@ PopupWindow {
                                         ? st + "  •  " + Math.round(modelData.battery * 100) + "%"
                                         : st
                                     color: Svc.Theme.subtext
-                                    font.pixelSize: 10
+                                    font.pixelSize: Svc.Theme.fontXxs
                                 }
                             }
 
@@ -195,7 +198,7 @@ PopupWindow {
                                 text: modelData.pairing ? String.fromCodePoint(0xF0450)
                                     : String.fromCodePoint(modelData.connected ? 0xF00B1 : 0xF00AF)
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 14
+                                font.pixelSize: Svc.Theme.fontLg
                                 color: modelData.connected ? Svc.Theme.success : Svc.Theme.subtext
                                 RotationAnimation on rotation {
                                     running: modelData.pairing
@@ -237,7 +240,7 @@ PopupWindow {
                                     anchors.centerIn: parent
                                     text: modelData.connected ? "Disconnect" : "Connect"
                                     color: Svc.Theme.crust
-                                    font.pixelSize: 12
+                                    font.pixelSize: Svc.Theme.fontSm
                                     font.bold: true
                                 }
                                 MouseArea {
@@ -258,7 +261,7 @@ PopupWindow {
                                     anchors.centerIn: parent
                                     text: "Forget"
                                     color: Svc.Theme.danger
-                                    font.pixelSize: 12
+                                    font.pixelSize: Svc.Theme.fontSm
                                 }
                                 MouseArea {
                                     anchors.fill: parent

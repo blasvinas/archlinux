@@ -51,7 +51,7 @@ PanelWindow {
         height: Math.min(root.height - 120, 680)
         anchors.centerIn: parent
         radius: Svc.Theme.radiusXl
-        color: Svc.Theme.toastBg
+        color: Svc.Theme.glassBg
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -73,7 +73,7 @@ PanelWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wallpaper"
                     color: Svc.Theme.text
-                    font.pixelSize: 18
+                    font.pixelSize: Svc.Theme.font2xl
                     font.bold: true
                 }
 
@@ -85,7 +85,7 @@ PanelWindow {
                     Text {
                         text: String.fromCodePoint(0xF049D) // shuffle
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 20
+                        font.pixelSize: Svc.Theme.font3xl
                         color: shufHover.hovered ? Svc.Theme.accent : Svc.Theme.subtext
                         HoverHandler { id: shufHover }
                         MouseArea {
@@ -98,7 +98,7 @@ PanelWindow {
                     Text {
                         text: String.fromCodePoint(0xF0156) // close
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 20
+                        font.pixelSize: Svc.Theme.font3xl
                         color: closeHover.hovered ? Svc.Theme.danger : Svc.Theme.subtext
                         HoverHandler { id: closeHover }
                         MouseArea {
@@ -201,8 +201,8 @@ PanelWindow {
                                 anchors.centerIn: parent
                                 text: String.fromCodePoint(0xF012C) // check
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 13
-                                color: Svc.Theme.onAccent
+                                font.pixelSize: Svc.Theme.fontMd
+                                color: Svc.Theme.accentFg
                             }
                         }
 

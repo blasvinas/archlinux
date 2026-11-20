@@ -39,7 +39,7 @@ Item {
         visible: img.status !== Image.Ready
         text: (root.item.title || "?").slice(0, 1).toUpperCase()
         color: Svc.Theme.text
-        font.pixelSize: 13
+        font.pixelSize: Svc.Theme.fontMd
         font.bold: true
     }
 
@@ -79,6 +79,6 @@ Item {
             var p = root.mapToItem(root.barWindow.contentItem, 0, 0);
             return Math.round(p.x + root.width / 2);
         }
-        anchor.rect.y: root.barWindow ? root.barWindow.height : 32
+        anchor.rect.y: Svc.Theme.popupTop
     }
 }

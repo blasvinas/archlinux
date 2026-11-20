@@ -181,10 +181,19 @@ options root=UUID=<your-root-partition-uuid> rw
 - paru hypridle
 - paru brightnessctl
 - paru yazi
-- paru poppler
 - paru npm
 - paru go
 - paru hyprpolkitagent
+- paru uutils-coreutils
+- paru -S grim slurp swappy cliphist playerctl jq hyprpolkitagent xdg-desktop-portal-hyprland hyprsunset
+
+## Clone the repos
+- git clone ssh://git@codeberg.org/blasvinas/archlinux.git
+- git clone ssh://git@codeberg.org/blasvinas/wallpapers.git
+
+## Replace coreutils commands with uutils-coreutils
+- cd archlinx
+- sh coreutils.sh
 
 ## Configure a theme
 
@@ -208,20 +217,6 @@ options root=UUID=<your-root-partition-uuid> rw
 
 - gsettings set org.gnome.desktop.interface font-name "MesloLGS Nerd Font Mono"
 - gsettings get org.gnome.desktop.interface font-name
-
-## Configure rofi
-- git clone --depth=1 https://github.com/adi1090x/rofi.git
-- cd rofi
-- ./setup.sh 
-- cd ~/.config/rofi/launchers/type-3
-- nvim launch.sh 
-- change theme to style-3 
-- nvim /home/blas/.config/rofi/launchers/type-3/style-3.rasi
-- change the background-color for the window to black /80%
-- nvim ~/.config/rofi/powermenu/type-4/powermenu.sh
-- change the theme to style-3
-- nvim ~/.config/rofi/powermenu/type-4/style-3.rasi
-- change background-window to black /80%
 
 ## Plasma Login Manager
 - sudo mkdir /usr/share/backgrounds/
@@ -321,7 +316,6 @@ paru ledger-live-bin
 - In virtual manager application go to Edit -> Connection Detail -> Virtual network and make sure that Autostart On Boot is selected
 - Add the following line to .bashrc: export TERM=xterm
 
-
 ## Kitty
 
 Configure kitty to use catppuchin theme
@@ -331,20 +325,10 @@ Configure kitty to use catppuchin theme
 - Select Catppuchin Mocha
 - Type M to modify the theme
 
-
-## Deja Dup Backup
-
-- paru deja-dup
-- paru python-requests-oauthlib
-- paru gnome-keyring
-
-
-
 ## Zed Editor
 
 - paru zed
 - paru xdg-desktop-portal-gtk
-
 
 ## Install Dropbox
 

@@ -17,17 +17,20 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 280
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     Rectangle {
@@ -36,8 +39,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -52,7 +55,7 @@ PopupWindow {
                 font.family: Svc.Theme.fontFamily
                 text: "Brightness"
                 color: Svc.Theme.subtext
-                font.pixelSize: 11
+                font.pixelSize: Svc.Theme.fontXs
                 font.bold: true
             }
 
@@ -65,7 +68,7 @@ PopupWindow {
                     width: 24
                     text: Svc.Brightness.brightnessIcon()
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 20
+                    font.pixelSize: Svc.Theme.font3xl
                     color: Svc.Theme.text
                 }
 
@@ -83,7 +86,7 @@ PopupWindow {
                     horizontalAlignment: Text.AlignRight
                     text: Math.round(Svc.Brightness.percent * 100) + "%"
                     color: Svc.Theme.text
-                    font.pixelSize: 12
+                    font.pixelSize: Svc.Theme.fontSm
                     font.family: Svc.Theme.fontFamily
                 }
             }

@@ -13,7 +13,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
@@ -29,7 +29,7 @@ Item {
                 : Svc.Notifications.count > 0 ? 0xF009A     // bell
                 : 0xF009B)                                  // bell-outline
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Notifications.doNotDisturb ? Svc.Theme.danger
                  : Svc.Notifications.count > 0 ? Svc.Theme.accent : Svc.Theme.icon
         }
@@ -39,7 +39,7 @@ Item {
             visible: Svc.Notifications.count > 0
             text: Svc.Notifications.count
             color: Svc.Theme.text
-            font.pixelSize: 12
+            font.pixelSize: Svc.Theme.fontMd
             font.family: Svc.Theme.fontFamily
         }
     }
@@ -54,7 +54,7 @@ Item {
             if (m.button === Qt.RightButton)
                 Svc.Notifications.toggleDnd();
             else
-                panel.visible = !panel.visible;
+                panel.shown = !panel.shown;
         }
     }
 

@@ -35,7 +35,7 @@ Card {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.glyph
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 18
+                    font.pixelSize: Svc.Theme.font2xl
                     color: root.accent
                 }
                 Column {
@@ -44,7 +44,7 @@ Card {
                     Text {
                         text: root.metricTitle
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                         font.bold: true
                         color: Svc.Theme.text
                     }
@@ -52,7 +52,7 @@ Card {
                         visible: root.caption.length > 0
                         text: root.caption
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Svc.Theme.fontXxs
                         color: Svc.Theme.subtext
                     }
                 }
@@ -63,7 +63,7 @@ Card {
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.valueText
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 20
+                font.pixelSize: Svc.Theme.font3xl
                 font.bold: true
                 color: root.accent
             }

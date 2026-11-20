@@ -2,7 +2,6 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.SystemTray
 import QtQuick
-import QtQuick.Effects
 import "components"
 import "../services" as Svc
 
@@ -25,7 +24,15 @@ PanelWindow {
     }
 
     // Window is taller than the bar itself to leave room for the drop shadow.
-    implicitHeight: Svc.Theme.barMargin + Svc.Theme.barHeight + 8
+    implicitHeight: Svc.Theme.barMargin + Svc.Theme.barHeight + 28
+
+    // Only the pods accept input; the shadow area below is click-through so
+    // it never steals clicks from the tops of windows.
+    mask: Region {
+        Region { item: leftPod }
+        Region { item: centerPod }
+        Region { item: rightPod }
+    }
 
     // Reserve only the bar + top margin so windows don't render underneath it.
     exclusiveZone: Svc.Theme.barMargin + Svc.Theme.barHeight
@@ -34,25 +41,13 @@ PanelWindow {
     color: "transparent"
 
     // ---- Left pod: launcher + quick buttons + workspaces --------------------
-    Rectangle {
+    Pod {
         id: leftPod
-        height: Svc.Theme.barHeight
         anchors.left: parent.left
         anchors.leftMargin: Svc.Theme.barMargin
         anchors.top: parent.top
         anchors.topMargin: Svc.Theme.barMargin
-        radius: Svc.Theme.radiusLarge
-        color: Svc.Theme.barBg
         implicitWidth: leftRow.implicitWidth + Svc.Theme.podPadding * 2
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: Svc.Theme.shadowColor
-            shadowBlur: Svc.Theme.shadowBlur
-            shadowVerticalOffset: Svc.Theme.shadowY
-            autoPaddingEnabled: true
-        }
 
         Row {
             id: leftRow
@@ -74,24 +69,12 @@ PanelWindow {
     }
 
     // ---- Center pod: date and time (+ calendar popup) -----------------------
-    Rectangle {
+    Pod {
         id: centerPod
-        height: Svc.Theme.barHeight
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: Svc.Theme.barMargin
-        radius: Svc.Theme.radiusLarge
-        color: Svc.Theme.barBg
         implicitWidth: clock.implicitWidth + Svc.Theme.podPadding * 2
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: Svc.Theme.shadowColor
-            shadowBlur: Svc.Theme.shadowBlur
-            shadowVerticalOffset: Svc.Theme.shadowY
-            autoPaddingEnabled: true
-        }
 
         Clock {
             id: clock
@@ -101,25 +84,13 @@ PanelWindow {
     }
 
     // ---- Right pod: tray + system widgets -----------------------------------
-    Rectangle {
+    Pod {
         id: rightPod
-        height: Svc.Theme.barHeight
         anchors.right: parent.right
         anchors.rightMargin: Svc.Theme.barMargin
         anchors.top: parent.top
         anchors.topMargin: Svc.Theme.barMargin
-        radius: Svc.Theme.radiusLarge
-        color: Svc.Theme.barBg
         implicitWidth: rightRow.implicitWidth + Svc.Theme.podPadding * 2
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: Svc.Theme.shadowColor
-            shadowBlur: Svc.Theme.shadowBlur
-            shadowVerticalOffset: Svc.Theme.shadowY
-            autoPaddingEnabled: true
-        }
 
         Row {
             id: rightRow

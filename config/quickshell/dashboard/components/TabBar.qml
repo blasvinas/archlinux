@@ -33,16 +33,16 @@ Row {
                     anchors.verticalCenter: parent.verticalCenter
                     text: modelData.glyph
                     font.family: Svc.Theme.iconFont
-                    font.pixelSize: 15
-                    color: active ? Svc.Theme.onAccent : Svc.Theme.icon
+                    font.pixelSize: Svc.Theme.fontLg
+                    color: active ? Svc.Theme.accentFg : Svc.Theme.icon
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: modelData.label
                     font.family: Svc.Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Svc.Theme.fontSm
                     font.bold: active
-                    color: active ? Svc.Theme.onAccent : Svc.Theme.text
+                    color: active ? Svc.Theme.accentFg : Svc.Theme.text
                 }
             }
 

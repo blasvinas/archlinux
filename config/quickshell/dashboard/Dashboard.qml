@@ -93,7 +93,7 @@ PanelWindow {
         anchors.top: parent.top
         anchors.topMargin: Svc.Theme.barMargin + Svc.Theme.barHeight + 6
         radius: Svc.Theme.radiusXl
-        color: Svc.Theme.popupBg
+        color: Svc.Theme.glassBg
         border.color: Svc.Theme.border
         border.width: 1
 

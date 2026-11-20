@@ -13,7 +13,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
@@ -26,7 +26,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Bt.statusIcon()
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Bt.connectedCount > 0 ? Svc.Theme.accent : Svc.Theme.icon
         }
 
@@ -35,7 +35,7 @@ Item {
             visible: Svc.Bt.connectedCount > 0
             text: Svc.Bt.connectedCount
             color: Svc.Theme.text
-            font.pixelSize: 12
+            font.pixelSize: Svc.Theme.fontMd
             font.family: Svc.Theme.fontFamily
         }
     }
@@ -46,10 +46,10 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: {
-            panel.visible = !panel.visible;
-            if (panel.visible && Svc.Bt.enabled)
+            panel.shown = !panel.shown;
+            if (panel.shown && Svc.Bt.enabled)
                 Svc.Bt.setDiscovering(true);
-            else if (!panel.visible)
+            else if (!panel.shown)
                 Svc.Bt.setDiscovering(false);
         }
     }

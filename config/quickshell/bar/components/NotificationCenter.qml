@@ -17,17 +17,20 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 380
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     HyprlandFocusGrab {
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     Rectangle {
@@ -36,8 +39,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -58,7 +61,7 @@ PopupWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Notifications"
                     color: Svc.Theme.text
-                    font.pixelSize: 15
+                    font.pixelSize: Svc.Theme.fontLg
                     font.bold: true
                 }
 
@@ -72,7 +75,7 @@ PopupWindow {
                         text: String.fromCodePoint(
                             Svc.Notifications.doNotDisturb ? 0xF009C : 0xF009B)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         color: Svc.Notifications.doNotDisturb ? Svc.Theme.danger : Svc.Theme.subtext
                         MouseArea {
                             anchors.fill: parent
@@ -86,7 +89,7 @@ PopupWindow {
                     Text {
                         text: String.fromCodePoint(0xF05E9) // delete-sweep
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         color: clearMouse.containsMouse ? Svc.Theme.danger : Svc.Theme.subtext
                         visible: Svc.Notifications.count > 0
                         MouseArea {
@@ -115,7 +118,7 @@ PopupWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: String.fromCodePoint(0xF009B)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 28
+                        font.pixelSize: Svc.Theme.fontHero
                         color: Svc.Theme.hi
                     }
                     Text {
@@ -124,7 +127,7 @@ PopupWindow {
                         text: Svc.Notifications.doNotDisturb
                             ? "Do not disturb is on" : "No notifications"
                         color: Svc.Theme.subtext
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                     }
                 }
             }
@@ -180,7 +183,7 @@ PopupWindow {
                                     anchors.centerIn: parent
                                     text: (modelData.appName || "?").slice(0, 1).toUpperCase()
                                     color: Svc.Theme.text
-                                    font.pixelSize: 14
+                                    font.pixelSize: Svc.Theme.fontLg
                                     font.bold: true
                                 }
                             }
@@ -194,7 +197,7 @@ PopupWindow {
                                 width: parent.width
                                 text: modelData.appName || ""
                                 color: Svc.Theme.accent
-                                font.pixelSize: 9
+                                font.pixelSize: Svc.Theme.fontXxs
                                 font.bold: true
                                 elide: Text.ElideRight
                                 visible: text.length > 0
@@ -204,7 +207,7 @@ PopupWindow {
                                 width: parent.width
                                 text: modelData.summary || ""
                                 color: Svc.Theme.text
-                                font.pixelSize: 12
+                                font.pixelSize: Svc.Theme.fontSm
                                 font.bold: true
                                 wrapMode: Text.Wrap
                                 maximumLineCount: 2
@@ -215,7 +218,7 @@ PopupWindow {
                                 width: parent.width
                                 text: modelData.body || ""
                                 color: Svc.Theme.subtext
-                                font.pixelSize: 11
+                                font.pixelSize: Svc.Theme.fontXs
                                 textFormat: Text.StyledText
                                 wrapMode: Text.Wrap
                                 maximumLineCount: 3
@@ -232,7 +235,7 @@ PopupWindow {
                         anchors.margins: 8
                         text: String.fromCodePoint(0xF0156)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 12
+                        font.pixelSize: Svc.Theme.fontSm
                         color: itemClose.containsMouse ? Svc.Theme.danger : Svc.Theme.subtext
                         MouseArea {
                             id: itemClose

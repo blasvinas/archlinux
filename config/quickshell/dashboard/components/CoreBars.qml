@@ -15,7 +15,7 @@ Column {
     Text {
         text: "Per-core"
         font.family: Svc.Theme.fontFamily
-        font.pixelSize: 11
+        font.pixelSize: Svc.Theme.fontXs
         color: Svc.Theme.subtext
     }
 

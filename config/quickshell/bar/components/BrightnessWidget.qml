@@ -14,30 +14,35 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Svc.Theme.radiusMedium
-        color: mouse.containsMouse || panel.visible ? Svc.Theme.hover : "transparent"
+        color: mouse.containsMouse || panel.shown ? Svc.Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
 
     Row {
         id: row
         anchors.centerIn: parent
-        spacing: 4
+        spacing: 0
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: Svc.Brightness.brightnessIcon()
             font.family: Svc.Theme.iconFont
-            font.pixelSize: 16
+            font.pixelSize: Svc.Theme.iconSize
             color: Svc.Theme.icon
         }
 
-        Text {
+        RevealLabel {
             anchors.verticalCenter: parent.verticalCenter
             text: Math.round(Svc.Brightness.percent * 100) + "%"
-            color: Svc.Theme.text
-            font.pixelSize: 12
-            font.family: Svc.Theme.fontFamily
+            revealed: mouse.containsMouse || panel.shown || flash.running
         }
+    }
+
+    // Briefly show the percentage after brightness changes (keys / scroll).
+    Timer { id: flash; interval: 1500 }
+    Connections {
+        target: Svc.Brightness
+        function onPercentChanged() { flash.restart(); }
     }
 
     MouseArea {
@@ -45,7 +50,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: panel.visible = !panel.visible
+        onClicked: panel.shown = !panel.shown
         onWheel: (w) => Svc.Brightness.step(w.angleDelta.y > 0 ? 5 : -5)
     }
 

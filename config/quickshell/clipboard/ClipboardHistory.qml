@@ -88,7 +88,7 @@ PanelWindow {
         anchors.top: parent.top
         anchors.topMargin: Math.round(parent.height * 0.12)
         radius: Svc.Theme.radiusXl
-        color: Svc.Theme.toastBg
+        color: Svc.Theme.glassBg
         border.color: Svc.Theme.border
         border.width: 1
 
@@ -124,7 +124,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: String.fromCodePoint(0xF0349) // magnify
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: Svc.Theme.subtext
                     }
                     TextInput {
@@ -132,7 +132,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width - 34 - 26
                         color: Svc.Theme.text
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         clip: true
                         focus: true
                         onTextChanged: root.query = text
@@ -158,7 +158,7 @@ PanelWindow {
                             verticalAlignment: Text.AlignVCenter
                             text: "Search clipboard…"
                             color: Svc.Theme.subtext
-                            font.pixelSize: 16
+                            font.pixelSize: Svc.Theme.fontXl
                             visible: input.text.length === 0
                         }
                     }
@@ -167,7 +167,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: String.fromCodePoint(0xF0A7A) // delete
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 18
+                        font.pixelSize: Svc.Theme.font2xl
                         color: clearHover.hovered ? Svc.Theme.danger : Svc.Theme.subtext
                         HoverHandler { id: clearHover }
                         MouseArea {
@@ -207,7 +207,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.preview
                         color: Svc.Theme.text
-                        font.pixelSize: 13
+                        font.pixelSize: Svc.Theme.fontMd
                         font.family: Svc.Theme.fontFamily
                         elide: Text.ElideRight
                     }
@@ -219,7 +219,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: String.fromCodePoint(0xF0A7A)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 15
+                        font.pixelSize: Svc.Theme.fontLg
                         color: trashHover.hovered ? Svc.Theme.danger : Svc.Theme.subtext
                         HoverHandler { id: trashHover }
                         MouseArea {
@@ -246,7 +246,7 @@ PanelWindow {
                     visible: root.results.length === 0
                     text: Svc.Clipboard.entries.length === 0 ? "Clipboard is empty" : "No matches"
                     color: Svc.Theme.subtext
-                    font.pixelSize: 14
+                    font.pixelSize: Svc.Theme.fontLg
                 }
             }
         }

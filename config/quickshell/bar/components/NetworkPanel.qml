@@ -19,19 +19,22 @@ PopupWindow {
         var p = anchorItem.mapToItem(barWindow.contentItem, 0, 0);
         return Math.round(p.x + anchorItem.width - width);
     }
-    anchor.rect.y: barWindow ? barWindow.height : 32
+    anchor.rect.y: Svc.Theme.popupTop
 
     implicitWidth: 340
     implicitHeight: content.implicitHeight
-    visible: false
+    // `shown` drives the open state; the window stays mapped until the
+    // fade-out finishes so closing animates too.
+    property bool shown: false
+    visible: shown || content.opacity > 0
     color: "transparent"
 
     // Click outside to dismiss.
     HyprlandFocusGrab {
         id: grab
         windows: [pop]
-        active: pop.visible
-        onCleared: pop.visible = false
+        active: pop.shown
+        onCleared: pop.shown = false
     }
 
     onVisibleChanged: if (!visible) selectedSsid = ""
@@ -42,8 +45,8 @@ PopupWindow {
         implicitHeight: layout.implicitHeight
         radius: Svc.Theme.radiusLarge
         color: Svc.Theme.popupBg
-        opacity: pop.visible ? 1 : 0
-        transform: Translate { y: pop.visible ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
+        opacity: pop.shown ? 1 : 0
+        transform: Translate { y: pop.shown ? 0 : -8; Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } } }
         Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutQuad } }
         border.color: Svc.Theme.border
         border.width: 1
@@ -64,7 +67,7 @@ PopupWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wi-Fi"
                     color: Svc.Theme.text
-                    font.pixelSize: 15
+                    font.pixelSize: Svc.Theme.fontLg
                     font.bold: true
                 }
 
@@ -77,7 +80,7 @@ PopupWindow {
                     Text {
                         text: String.fromCodePoint(0xF0450)
                         font.family: Svc.Theme.iconFont
-                        font.pixelSize: 16
+                        font.pixelSize: Svc.Theme.fontXl
                         color: Svc.Network.scanning ? Svc.Theme.accent : Svc.Theme.subtext
                         MouseArea {
                             anchors.fill: parent
@@ -119,7 +122,7 @@ PopupWindow {
                 visible: !Svc.Network.wifiEnabled
                 text: "Wi-Fi is turned off"
                 color: Svc.Theme.subtext
-                font.pixelSize: 13
+                font.pixelSize: Svc.Theme.fontMd
             }
 
             ListView {
@@ -153,7 +156,7 @@ PopupWindow {
                             Text {
                                 text: Svc.Network.signalIcon(modelData.signal, modelData.secure)
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 16
+                                font.pixelSize: Svc.Theme.fontXl
                                 color: modelData.active ? Svc.Theme.accent : Svc.Theme.text
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -161,7 +164,7 @@ PopupWindow {
                                 font.family: Svc.Theme.fontFamily
                                 text: modelData.ssid
                                 color: modelData.active ? Svc.Theme.accent : Svc.Theme.text
-                                font.pixelSize: 13
+                                font.pixelSize: Svc.Theme.fontMd
                                 font.bold: modelData.active
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -178,14 +181,14 @@ PopupWindow {
                                 visible: modelData.active
                                 text: "connected"
                                 color: Svc.Theme.subtext
-                                font.pixelSize: 11
+                                font.pixelSize: Svc.Theme.fontXs
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                             Text {
                                 visible: modelData.secure
                                 text: String.fromCodePoint(0xF033E)
                                 font.family: Svc.Theme.iconFont
-                                font.pixelSize: 13
+                                font.pixelSize: Svc.Theme.fontMd
                                 color: Svc.Theme.subtext
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -231,7 +234,7 @@ PopupWindow {
                                     anchors.centerIn: parent
                                     text: "Disconnect"
                                     color: Svc.Theme.crust
-                                    font.pixelSize: 12
+                                    font.pixelSize: Svc.Theme.fontSm
                                     font.bold: true
                                 }
                                 MouseArea {
@@ -262,7 +265,7 @@ PopupWindow {
                                     anchors.rightMargin: 8
                                     verticalAlignment: TextInput.AlignVCenter
                                     color: Svc.Theme.text
-                                    font.pixelSize: 13
+                                    font.pixelSize: Svc.Theme.fontMd
                                     echoMode: TextInput.Password
                                     clip: true
                                     onAccepted: {
@@ -275,7 +278,7 @@ PopupWindow {
                                         verticalAlignment: Text.AlignVCenter
                                         text: "Password"
                                         color: Svc.Theme.subtext
-                                        font.pixelSize: 13
+                                        font.pixelSize: Svc.Theme.fontMd
                                         visible: pw.text.length === 0 && !pw.activeFocus
                                     }
                                 }
@@ -288,7 +291,7 @@ PopupWindow {
                                     anchors.centerIn: parent
                                     text: "Connect"
                                     color: Svc.Theme.crust
-                                    font.pixelSize: 12
+                                    font.pixelSize: Svc.Theme.fontSm
                                     font.bold: true
                                 }
                                 MouseArea {

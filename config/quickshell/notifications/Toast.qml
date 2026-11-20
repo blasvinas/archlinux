@@ -16,7 +16,7 @@ Rectangle {
     width: 380
     implicitHeight: Math.max(64, layout.implicitHeight + 20)
     radius: Svc.Theme.radiusLarge
-    color: Svc.Theme.toastBg
+    color: Svc.Theme.glassBg
     border.color: Svc.Theme.border
     border.width: 1
 
@@ -92,7 +92,7 @@ Rectangle {
                     anchors.centerIn: parent
                     text: (card.notif.appName || "?").slice(0, 1).toUpperCase()
                     color: Svc.Theme.text
-                    font.pixelSize: 18
+                    font.pixelSize: Svc.Theme.font2xl
                     font.bold: true
                 }
             }
@@ -108,7 +108,7 @@ Rectangle {
                 width: parent.width
                 text: card.notif.appName || ""
                 color: Svc.Theme.accent
-                font.pixelSize: 10
+                font.pixelSize: Svc.Theme.fontXxs
                 font.bold: true
                 elide: Text.ElideRight
                 visible: text.length > 0
@@ -118,7 +118,7 @@ Rectangle {
                 width: parent.width
                 text: card.notif.summary || ""
                 color: Svc.Theme.text
-                font.pixelSize: 13
+                font.pixelSize: Svc.Theme.fontMd
                 font.bold: true
                 wrapMode: Text.Wrap
                 maximumLineCount: 2
@@ -129,7 +129,7 @@ Rectangle {
                 width: parent.width
                 text: card.notif.body || ""
                 color: Svc.Theme.subtext
-                font.pixelSize: 12
+                font.pixelSize: Svc.Theme.fontSm
                 textFormat: Text.StyledText
                 wrapMode: Text.Wrap
                 maximumLineCount: 4
@@ -157,7 +157,7 @@ Rectangle {
                             anchors.centerIn: parent
                             text: modelData.text
                             color: Svc.Theme.text
-                            font.pixelSize: 11
+                            font.pixelSize: Svc.Theme.fontXs
                         }
                         MouseArea {
                             id: aMouse
@@ -182,7 +182,7 @@ Rectangle {
         anchors.margins: 8
         text: String.fromCodePoint(0xF0156)
         font.family: Svc.Theme.iconFont
-        font.pixelSize: 14
+        font.pixelSize: Svc.Theme.fontLg
         color: closeMouse.containsMouse ? Svc.Theme.text : Svc.Theme.subtext
         MouseArea {
             id: closeMouse

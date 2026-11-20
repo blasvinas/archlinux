@@ -18,9 +18,9 @@ Item {
     Text {
         id: icon
         anchors.centerIn: parent
-        text: String.fromCodePoint(0xF0309) // view-dashboard
+        text: String.fromCodePoint(0xF056E) // view-dashboard
         font.family: Svc.Theme.iconFont
-        font.pixelSize: 18
+        font.pixelSize: Svc.Theme.iconSize
         color: mouse.containsMouse ? Svc.Theme.text : Svc.Theme.icon
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }

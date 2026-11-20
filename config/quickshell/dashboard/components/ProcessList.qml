@@ -35,7 +35,7 @@ Card {
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Top processes"
                 font.family: Svc.Theme.fontFamily
-                font.pixelSize: 12
+                font.pixelSize: Svc.Theme.fontSm
                 font.bold: true
                 color: Svc.Theme.subtext
             }
@@ -62,9 +62,9 @@ Card {
                             anchors.centerIn: parent
                             text: modelData.label
                             font.family: Svc.Theme.fontFamily
-                            font.pixelSize: 10
+                            font.pixelSize: Svc.Theme.fontXxs
                             font.bold: active
-                            color: active ? Svc.Theme.onAccent : Svc.Theme.text
+                            color: active ? Svc.Theme.accentFg : Svc.Theme.text
                         }
                         MouseArea {
                             id: pma
@@ -117,7 +117,7 @@ Card {
                         elide: Text.ElideRight
                         text: modelData.name
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 11
+                        font.pixelSize: Svc.Theme.fontXs
                         color: Svc.Theme.text
                     }
                     Text {
@@ -128,7 +128,7 @@ Card {
                             ? modelData.cpu.toFixed(1) + "%"
                             : Svc.SysInfo.fmtBytes(modelData.mem)
                         font.family: Svc.Theme.fontFamily
-                        font.pixelSize: 11
+                        font.pixelSize: Svc.Theme.fontXs
                         font.bold: true
                         color: root.mode === 0 ? Svc.Theme.accent : Svc.Theme.success
                     }

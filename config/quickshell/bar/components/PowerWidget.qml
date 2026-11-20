@@ -24,7 +24,7 @@ Item {
         anchors.centerIn: parent
         text: String.fromCodePoint(0xF0425) // power
         font.family: Svc.Theme.iconFont
-        font.pixelSize: 16
+        font.pixelSize: Svc.Theme.iconSize
         color: mouse.containsMouse || root.active ? Svc.Theme.danger : Svc.Theme.icon
         Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.OutQuad } }
     }
