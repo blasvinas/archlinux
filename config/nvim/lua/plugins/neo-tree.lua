@@ -13,6 +13,10 @@ return {
 	},
 	opts = {
 		filesystem = {
+			filtered_items = {
+				-- terraform.tfvars is usually gitignored, so neo-tree hides it by default
+				always_show_by_pattern = { "*.tfvars", "*.tfvars.json" },
+			},
 			window = {
 				mappings = {
 					["\\"] = "close_window",
