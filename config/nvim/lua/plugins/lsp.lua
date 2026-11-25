@@ -3,8 +3,8 @@ return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		-- Automatically install LSPs and related tools to stdpath for Neovim
-		{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
-		"williamboman/mason-lspconfig.nvim",
+		{ "mason-org/mason.nvim", opts = {} }, -- NOTE: Must be loaded before dependants
+		"mason-org/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 		-- Useful status updates for LSP.
@@ -100,7 +100,7 @@ return {
 				--
 				-- When you move your cursor, the highlights will be cleared (the second autocommand).
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
-				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+				if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
 					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 						buffer = event.buf,
@@ -127,7 +127,7 @@ return {
 				-- code, if the language server you are using supports them
 				--
 				-- This may be unwanted, since they displace some of your code
-				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+				if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
 					map("<leader>th", function()
 						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 					end, "[T]oggle Inlay [H]ints")
@@ -200,12 +200,9 @@ return {
 							callSnippet = "Replace",
 						},
 						runtime = { version = "LuaJIT" },
+						-- Neovim runtime/plugin libraries are provided on demand by lazydev.nvim (see misc.lua)
 						workspace = {
 							checkThirdParty = false,
-							library = {
-								"${3rd}/luv/library",
-								unpack(vim.api.nvim_get_runtime_file("", true)),
-							},
 						},
 						diagnostics = { disable = { "missing-fields" } },
 						format = {
@@ -222,26 +219,36 @@ return {
 		--    :Mason
 		--
 		--  You can press `g?` for help in this menu.
-		require("mason").setup()
 
 		-- You can add other tools here that you want Mason to install
 		-- for you, so that they are available from within Neovim.
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			"stylua", -- Used to format Lua code
+			-- Formatters used by conform.nvim (see conform.lua)
+			"prettier",
+			"black",
+			"isort",
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+		-- Neovim 0.11+ / mason-lspconfig v2 style:
+		-- Default capabilities for all servers (adds nvim-cmp completion support)
+		vim.lsp.config("*", { capabilities = capabilities })
+
+		-- Per-server overrides (merged on top of nvim-lspconfig's defaults)
+		for server_name, server in pairs(servers) do
+			if next(server) ~= nil then
+				vim.lsp.config(server_name, server)
+			end
+		end
+
+		-- mason-lspconfig v2 automatically calls vim.lsp.enable() for installed servers
 		require("mason-lspconfig").setup({
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for tsserver)
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
-				end,
+			ensure_installed = {},
+			automatic_enable = {
+				-- stylua is installed as a formatter for conform.nvim; don't also run it as an LSP
+				exclude = { "stylua" },
 			},
 		})
 	end,

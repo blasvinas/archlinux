@@ -3,12 +3,12 @@ return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 
-	-- configure lualine with the dracula theme
+	-- configure lualine; "auto" follows the active colorscheme (catppuccin)
 	config = function()
 		local lazy_status = require("lazy.status")
 		require("lualine").setup({
 			options = {
-				theme = "dracula",
+				theme = "auto",
 			},
 			sections = {
 				lualine_x = {
